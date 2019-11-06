@@ -8,8 +8,4 @@
     <ProjectReference Include="..\SignalRProject.ViewModels\SignalRProject.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Interfaces\" />
-  </ItemGroup>
-
 </Project>
