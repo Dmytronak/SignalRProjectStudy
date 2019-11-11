@@ -69,3 +69,73 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.input-group-text-bottom {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: .375rem .75rem;
+    margin-bottom: 0;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    bottom: 70px;
+    position: absolute;
+}
+.message-box-fixed {
+    display:block;
+    height:700px;
+}
+
+.chat-container {
+    height: 700px;
+    overflow: auto;
+}
+
+    .chat-container .message {
+        border-bottom: solid 1px #ccc;
+        padding: 20px;
+        direction: ltr;
+    }
+
+        .chat-container .message .avatar {
+            float: initial;
+            margin-right: 5px;
+        }
+        .chat-container .message .nick-name {
+            float: initial;
+            margin-right: 5px;
+        }
+        .chat-container .message .message-text {
+            text-align: right;
+            margin: 0 auto;
+        }
+        .chat-container .message .datetime {
+            float: right;
+            color: #999;
+        }
+
+.send-message-form {
+    padding: 10px;
+}
+    .send-message-form input {
+        width: 100%;
+        border: none;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .send-message-form button {
+        display: block;
+    }
+
+.text-center-padding {
+    text-align:center;
+    padding:10px;
+}

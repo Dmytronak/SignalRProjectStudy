@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRProject.Web", "SignalRProject.Web\SignalRProject.Web.csproj", "{81FDCF37-0146-4DEE-8FEB-7BFAD762D73E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRProject.DataAccess", "SignalRProject.DataAccess\SignalRProject.DataAccess.csproj", "{D10C0720-E14D-4F29-A89E-D8230811278E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRProject.DataAccess", "SignalRProject.DataAccess\SignalRProject.DataAccess.csproj", "{D10C0720-E14D-4F29-A89E-D8230811278E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRProject.BusinessLogic", "SignalRProject.BusinessLogic\SignalRProject.BusinessLogic.csproj", "{B4F191DF-85A1-4F9B-B124-90E95A62F7D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRProject.BusinessLogic", "SignalRProject.BusinessLogic\SignalRProject.BusinessLogic.csproj", "{B4F191DF-85A1-4F9B-B124-90E95A62F7D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRProject.ViewModels", "SignalRProject.ViewModels\SignalRProject.ViewModels.csproj", "{C3775548-D11E-4ADF-A150-B678A53223B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRProject.ViewModels", "SignalRProject.ViewModels\SignalRProject.ViewModels.csproj", "{C3775548-D11E-4ADF-A150-B678A53223B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
