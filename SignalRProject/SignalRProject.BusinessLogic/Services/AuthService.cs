@@ -85,5 +85,14 @@ namespace SignalRProject.BusinessLogic.Services
             return response;
         }
 
+        public async Task LogOut()
+        {
+            await _signInManager.SignOutAsync();
+
+            if (_signInManager.Context.User?.Identity.IsAuthenticated == true)
+            {
+                _signInManager.Context.Response.Cookies.Delete(".SignalRProjectCookieName");
+            }
+        }
     }
 }

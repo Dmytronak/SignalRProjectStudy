@@ -30,7 +30,9 @@ namespace SignalRProject.Web
             services.AddDatabaseContextConfiguration(Configuration);
             services.AddIdentityConfiguration();
             services.AddSignalRConfiguration();
+            services.AddCookiesConfiguration();
             services.AddJwtConfiguration(Configuration);
+
 
             services.AddMvc(options =>
             {
@@ -46,6 +48,7 @@ namespace SignalRProject.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseMiddleware(typeof(ExceptionMiddleware));
 

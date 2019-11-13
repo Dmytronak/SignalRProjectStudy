@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -16,11 +18,17 @@ namespace SignalRProject.BusinessLogic.Configurations
             var jwtOption = configuration.GetSection("Jwt").Get<JwtOption>();
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services
-                .AddAuthentication(options =>
+                //.AddAuthentication(options =>
+                //{
+                //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                //    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                //    // options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; for redirect to login page
+                //})
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
                 {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.LoginPath = new PathString("/Auth/Login");
+                    options.LogoutPath = new PathString("/");
                 })
                 .AddJwtBearer(options =>
                 {

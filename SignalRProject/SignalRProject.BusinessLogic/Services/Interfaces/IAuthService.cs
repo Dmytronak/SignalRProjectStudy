@@ -8,5 +8,6 @@ namespace SignalRProject.BusinessLogic.Services.Interfaces
         Task<LoginAuthResponseView> Login(LoginAuthView model);
         Task<LoginAuthResponseView> Register(RegisterAuthView model);
         Task<GetAllAuthView> GetAll();
+        Task LogOut();
     }
 }

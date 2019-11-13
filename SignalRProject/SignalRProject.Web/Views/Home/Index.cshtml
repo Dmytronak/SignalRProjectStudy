@@ -12,10 +12,8 @@
     </div>
     <div class="send-message-form">
         <div class="row input-group">
-            <div class="col-2 text-center-padding">User</div>
-            <div class="col-3 "><input type="text" id="userInput" value="Dima" /></div>
-            <div class="col-2 text-center-padding">Message</div>
-            <div class="col-3"><input type="text" id="messageInput" /></div>
+            <div class="col-1 text-center-padding">Message</div>
+            <div class="col-9"><input type="text" id="messageInput" /></div>
             <div class="col-2">
                 <input type="button" id="sendButton" value="Send Message" />
             </div>
@@ -23,3 +21,6 @@
     </div>
 </div>
 
+<script>
+    var userEmail = '@User?.Identity?.Name';
+</script>
