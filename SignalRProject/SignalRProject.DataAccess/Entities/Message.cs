@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace SignalRProject.DataAccess.Entities
+﻿namespace SignalRProject.DataAccess.Entities
 {
     public class Message : BaseEntity
     {

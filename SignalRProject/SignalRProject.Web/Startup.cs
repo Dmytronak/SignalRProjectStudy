@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using SignalRProject.BusinessLogic;
 using SignalRProject.BusinessLogic.Configurations;
-using SignalRProject.BusinessLogic.HubServices;
+using SignalRProject.BusinessLogic.Hubs;
 using SignalRProject.Web.Filters;
 using SignalRProject.Web.Middlewares;
 
@@ -57,7 +56,7 @@ namespace SignalRProject.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapHub<HubChatService>("/chatHub");
+                endpoints.MapHub<HubChat>("/chatHub");
 
             });
 

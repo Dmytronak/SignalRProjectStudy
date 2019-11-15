@@ -113,7 +113,7 @@ body {
             margin-right: 5px;
         }
         .chat-container .message .message-text {
-            text-align: right;
+            text-align: left;
             margin: 0 auto;
         }
         .chat-container .message .datetime {
