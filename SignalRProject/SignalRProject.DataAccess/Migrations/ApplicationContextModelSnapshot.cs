@@ -150,14 +150,31 @@ namespace SignalRProject.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Chat", b =>
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Message", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ChatStatusType")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreationAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Room", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreationAt")
                         .HasColumnType("datetime2");
@@ -166,6 +183,9 @@ namespace SignalRProject.DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -177,27 +197,7 @@ namespace SignalRProject.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Chats");
-                });
-
-            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreationAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("MessageText")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MessageTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Messages");
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("SignalRProject.DataAccess.Entities.User", b =>
@@ -328,7 +328,7 @@ namespace SignalRProject.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Chat", b =>
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Room", b =>
                 {
                     b.HasOne("SignalRProject.DataAccess.Entities.Message", "Message")
                         .WithMany()

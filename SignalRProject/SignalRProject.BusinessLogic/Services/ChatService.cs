@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SignalRProject.BusinessLogic.Services
 {
-    class ChatService
+    public class ChatService
     {
     }
 }

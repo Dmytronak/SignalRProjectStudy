@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SignalRProject.DataAccess.Migrations
 {
-    public partial class CreatingBaseModelsOfChat : Migration
+    public partial class AddingBaseDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,8 +56,8 @@ namespace SignalRProject.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CreationAt = table.Column<DateTime>(nullable: false),
-                    MessageTitle = table.Column<string>(nullable: true),
-                    MessageText = table.Column<string>(nullable: true)
+                    Timestamp = table.Column<DateTime>(nullable: false),
+                    Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,27 +171,27 @@ namespace SignalRProject.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Chats",
+                name: "Rooms",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CreationAt = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
-                    ChatStatusType = table.Column<int>(nullable: false),
+                    Photo = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true),
                     MessageId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Chats", x => x.Id);
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Chats_Messages_MessageId",
+                        name: "FK_Rooms_Messages_MessageId",
                         column: x => x.MessageId,
                         principalTable: "Messages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Chats_AspNetUsers_UserId",
+                        name: "FK_Rooms_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -238,13 +238,13 @@ namespace SignalRProject.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_MessageId",
-                table: "Chats",
+                name: "IX_Rooms_MessageId",
+                table: "Rooms",
                 column: "MessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Chats_UserId",
-                table: "Chats",
+                name: "IX_Rooms_UserId",
+                table: "Rooms",
                 column: "UserId");
         }
 
@@ -266,7 +266,7 @@ namespace SignalRProject.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Chats");
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -7,7 +7,7 @@ namespace SignalRProject.DataAccess
     public class ApplicationContext : IdentityDbContext<User>
     {
         public DbSet<Message> Messages { get; set; }
-        public DbSet<Chat> Chats { get; set; }
+        public DbSet<Room> Rooms { get; set; }
 
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) 

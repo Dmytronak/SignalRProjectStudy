@@ -29,7 +29,7 @@ namespace SignalRProject.Web
             services.AddDatabaseContextConfiguration(Configuration);
             services.AddIdentityConfiguration();
             services.AddSignalRConfiguration();
-            services.AddCookiesConfiguration();
+           // services.AddCookiesConfiguration();
             services.AddJwtConfiguration(Configuration);
 
 

@@ -1,11 +1,21 @@
 ﻿"use strict";
-
-var connection = new signalR.HubConnectionBuilder()
-    .withUrl("/chatHub")
+let token;
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/chatHub", { accessTokenFactory: () => token })
     .build();
 
-//Disable send button until connection is established
 document.getElementById("sendButton").disabled = true;
+
+connection.on('Notify', function (message) {
+
+    // добавляет элемент для диагностического сообщения
+    let notifyElem = document.createElement("b");
+    notifyElem.appendChild(document.createTextNode(message));
+    let elem = document.createElement("p");
+    elem.appendChild(notifyElem);
+    var firstElem = document.getElementById("messagesList").firstChild;
+    document.getElementById("messagesList").insertBefore(elem, firstElem);
+});
 
 connection.on("ReceiveMessage", function (user, message) {
 

@@ -15,7 +15,7 @@ namespace SignalRProject.BusinessLogic.Hubs
         }
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await Clients.All.SendAsync("Notify", $"{Context.ConnectionId} has left a conversation");
+            await Clients.All.SendAsync("Notify", $"{Context.UserIdentifier} has left a conversation");
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -25,7 +25,7 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         public async Task SendMessage(string user, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, $"{Context.ConnectionId} {message}");
+            await Clients.All.SendAsync("ReceiveMessage", user, $"{Context.UserIdentifier} {message}");
         }
 
         #endregion SendingMessages

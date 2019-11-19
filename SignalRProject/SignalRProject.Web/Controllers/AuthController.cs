@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using SignalRProject.BusinessLogic.Services.Interfaces;
 using SignalRProject.ViewModels.AuthViewModel;
@@ -15,16 +14,16 @@ namespace SignalRProject.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login(LoginAuthResponseView loginAuthResponse)
+        public IActionResult Login()
         {
-            return View(loginAuthResponse);
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginAuthView model)
         {
             var response = await _authService.Login(model);
-            return Redirect("/Home/Index");
+            return Ok(response);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -43,7 +42,7 @@ namespace SignalRProject.Web.Controllers
         public async Task<IActionResult> Register(RegisterAuthView model)
         {
             var response = await _authService.Register(model);
-            return RedirectToAction("LogIn", "Auth", response);
+            return Ok(response);
         }
         
         [HttpGet]

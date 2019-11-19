@@ -1,9 +1,11 @@
-﻿namespace SignalRProject.DataAccess.Entities
+﻿using System;
+
+namespace SignalRProject.DataAccess.Entities
 {
     public class Message : BaseEntity
     {
-        public string MessageTitle { get; set; }
-        public string MessageText { get; set; }
+        public DateTime Timestamp { get; set; }
 
+        public string Text { get; set; }
     }
 }
