@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Hubs
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HubChat : Hub
     {
         #region Notify
@@ -25,7 +28,7 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         public async Task SendMessage(string user, string message)
         {
-            await Clients.All.SendAsync("ReceiveMessage", user, $"{Context.UserIdentifier} {message}");
+            await Clients.All.SendAsync("ReceiveMessage", user, $"{Context.User.Identity.Name} {message}");
         }
 
         #endregion SendingMessages

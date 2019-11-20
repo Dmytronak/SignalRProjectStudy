@@ -1,5 +1,5 @@
 ﻿"use strict";
-let token;
+let token = localStorage.getItem('access_token');
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub", { accessTokenFactory: () => token })
     .build();
@@ -40,6 +40,7 @@ connection.on("ReceiveMessage", function (user, message) {
     document.getElementById("messagesList").appendChild(messegeDiv);
 
 });
+
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;
 }).catch(function (err) {

@@ -13,10 +13,15 @@ namespace SignalRProject.BusinessLogic.Services
 {
     public class AuthService : IAuthService
     {
+        #region Properties
+
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IJwtProvider _jwtProvider;
 
+        #endregion Properties
+
+        #region Constructor
         public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, IJwtProvider jwtProvider)
         {
             _signInManager = signInManager;
@@ -24,6 +29,9 @@ namespace SignalRProject.BusinessLogic.Services
             _jwtProvider = jwtProvider;
         }
 
+        #endregion Constructor
+
+        #region Public Methods
         public async Task<GetAllAuthView> GetAll()
         {
             List<User> users = await _userManager.Users.ToListAsync();
@@ -94,5 +102,7 @@ namespace SignalRProject.BusinessLogic.Services
                 _signInManager.Context.Response.Cookies.Delete(".SignalRProjectCookieName");
             }
         }
+        #endregion Public Methods
+
     }
 }

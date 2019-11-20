@@ -2,7 +2,7 @@
 
 namespace SignalRProject.DataAccess.Repositories.Interfaces
 {
-    public interface IChatRepository : IBaseRepository<Room>
+    public interface IRoomRepository : IBaseRepository<Room>
     {
     }
 }

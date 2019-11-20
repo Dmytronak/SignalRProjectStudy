@@ -1,5 +1,4 @@
-﻿
-$("#menu-toggle").click(function (e) {
+﻿$("#menu-toggle").click(function (e) {
         e.preventDefault();
     $("#wrapper").toggleClass("toggled");
 });
@@ -8,4 +7,4 @@ $("#menu-toggle").click(function (e) {
 $(".chat-container").stop().animate({
     scrollTop: $('.chat-container')[0].scrollHeight
 }, 1000);
-    /* Auto scroll */
+/* Auto scroll */

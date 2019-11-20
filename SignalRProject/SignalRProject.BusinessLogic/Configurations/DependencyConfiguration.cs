@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SignalRProject.BusinessLogic.Providers;
 using SignalRProject.BusinessLogic.Providers.Interfaces;
 using SignalRProject.BusinessLogic.Services;
@@ -13,10 +12,11 @@ namespace SignalRProject.BusinessLogic
     {
         public static void AddDependencyConfiguration(this IServiceCollection services)
         {
-            services.AddTransient<IChatRepository, ChatRepository>();
+            services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IMessageRepository, MessageRepository>();
 
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IJwtProvider, JwtProvider>();
         }
     }

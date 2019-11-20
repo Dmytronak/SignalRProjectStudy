@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using SignalRProject.ViewModels
+
+@model SignalRProject.ViewModels.ChatViewModel.GetAllRoomsChatView
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,43 +15,54 @@
 </head>
 <body>
     <div class="d-flex" id="wrapper">
-        <!-- Sidebar -->
-        <div class="bg-light border-right" id="sidebar-wrapper">
-            <div class="sidebar-heading">SignalRProject </div>
-            <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action bg-light">Chat1</a>
-                <a href="#" class="list-group-item list-group-item-action bg-light">Chat2</a>
-            </div>
-        </div>
-        <!-- /#sidebar-wrapper -->
+        @if (User.Identity.IsAuthenticated == true)
+        {
+            if (!Model.Rooms.Any())
+            {
+                <div class="bg-light border-right" id="sidebar-wrapper">
+                    <div class="sidebar-heading">SignalRProject </div>
+                    <div class="list-group list-group-flush">
+                        <button><i class="fas fa-plus"></i> room</button>
+                    </div>
+                </div>
+            }
+            if (Model.Rooms.Any())
+            {
+                <!-- Sidebar -->
+                <div class="bg-light border-right" id="sidebar-wrapper">
+                    <div class="sidebar-heading">SignalRProject </div>
+                    <div class="list-group list-group-flush">
+                        @foreach (var room in Model.Rooms)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action bg-light">@room.Name</a>
+                        }
+                    </div>
+                </div>
+                <!-- /#sidebar-wrapper -->
+            }
+
+        }
         <!-- Page Content -->
         <div id="page-content-wrapper">
-
             <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
                 <div class="container-fluid">
                     <button class="btn btn-light" id="menu-toggle"><i class="fas fa-bars"></i></button>
-
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                         <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Index">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                                <a class="nav-link text-dark">@User.Identity?.Name</a>
                             </li>
-                            @if (User.Identity.IsAuthenticated == true)
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark">@User.Identity?.Name</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Auth" asp-action="LogOut">LogOut</a>
-                                </li>
-                            }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark cursor-pointer" onclick="logOut()">LogOut</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -56,6 +71,8 @@
             <div class="container-fluid">
                 @RenderBody()
             </div>
+
+
         </div>
     </div>
     <footer class="border-top footer text-muted">
@@ -69,6 +86,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/custom/home.js"></script>
+    <script src="~/js/custom/auth.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -3,9 +3,9 @@ using SignalRProject.DataAccess.Repositories.Interfaces;
 
 namespace SignalRProject.DataAccess.Repositories.EntityFramework
 {
-    public class ChatRepository : BaseRepository<Room>, IChatRepository
+    public class RoomRepository : BaseRepository<Room>, IRoomRepository
     {
-        public ChatRepository(ApplicationContext context) : base(context)
+        public RoomRepository(ApplicationContext context) : base(context)
         {
         }
     }

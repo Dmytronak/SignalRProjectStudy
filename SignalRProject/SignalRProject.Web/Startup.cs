@@ -29,7 +29,7 @@ namespace SignalRProject.Web
             services.AddDatabaseContextConfiguration(Configuration);
             services.AddIdentityConfiguration();
             services.AddSignalRConfiguration();
-           // services.AddCookiesConfiguration();
+            services.AddCookiesConfiguration();
             services.AddJwtConfiguration(Configuration);
 
 
@@ -55,7 +55,7 @@ namespace SignalRProject.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Chat}/{action=Index}/{id?}");
                 endpoints.MapHub<HubChat>("/chatHub");
 
             });

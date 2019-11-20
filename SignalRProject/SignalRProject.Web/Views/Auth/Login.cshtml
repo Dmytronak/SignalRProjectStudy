@@ -10,7 +10,7 @@
     <article class="card-body">
         <a asp-controller="Auth" asp-action="Register" class="float-right btn btn-outline-primary">Sign up</a>
         <h4 class="card-title mb-4 mt-1">Sign in</h4>
-        <form id="LoginForm">
+        <form id="loginForm">
             <div class="form-group">
                 <label>Your email</label>
                 <input name="Email" class="form-control" placeholder="Email" type="email" id="emailValue">
@@ -20,7 +20,8 @@
                 <input class="form-control" type="password" name="Password" id="passwordValue">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary btn-block" id="submitLogin"> Login </button>
+                <button type="submit" class="btn btn-primary btn-block" onclick="login(event)"> Login </button>
+                <p id="loginErrorMessage" class="error-message"></p>
             </div>
         </form>
     </article>

@@ -124,20 +124,24 @@ body {
 .send-message-form {
     padding: 10px;
 }
-    .send-message-form input {
+    .send-message-form textarea {
         width: 100%;
+        min-height: 100px;
         border: none;
         font-size: 16px;
         padding: 10px;
+        outline: -webkit-focus-ring-color auto 1px;
     }
 
     .send-message-form button {
+        line-height: 90px;
         display: block;
     }
 
 .text-center-padding {
-    text-align:center;
-    padding:10px;
+    text-align: center;
+    padding: 10px;
+    line-height: 90px;
 }
 
 .card-login {
@@ -151,4 +155,16 @@ body {
     margin: 0 auto; /* Added */
     float: none; /* Added */
     margin-bottom: 10px; /* Added */
+}
+
+.error-message {
+    color:red;
+    text-align:center;
+}
+    .error-message:empty {
+        display: none;
+    }
+
+.cursor-pointer {
+    cursor:pointer;
 }

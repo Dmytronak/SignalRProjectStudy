@@ -25,7 +25,8 @@ namespace SignalRProject.BusinessLogic.Providers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Name, user.Id)
+                new Claim(ClaimTypes.Name, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName)
             };
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

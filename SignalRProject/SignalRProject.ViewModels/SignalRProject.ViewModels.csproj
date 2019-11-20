@@ -8,8 +8,4 @@
     <ProjectReference Include="..\SignalRProject.DataAccess\SignalRProject.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="HubChatViewModel\" />
-  </ItemGroup>
-
 </Project>
