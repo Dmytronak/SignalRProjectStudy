@@ -4,5 +4,7 @@ namespace SignalRProject.DataAccess.Repositories.Interfaces
 {
     public interface IRoomRepository : IBaseRepository<Room>
     {
+
     }
+         
 }

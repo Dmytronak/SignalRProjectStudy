@@ -15,33 +15,22 @@
 </head>
 <body>
     <div class="d-flex" id="wrapper">
-        @if (User.Identity.IsAuthenticated == true)
-        {
-            if (!Model.Rooms.Any())
-            {
-                <div class="bg-light border-right" id="sidebar-wrapper">
-                    <div class="sidebar-heading">SignalRProject </div>
-                    <div class="list-group list-group-flush">
-                        <button><i class="fas fa-plus"></i> room</button>
-                    </div>
-                </div>
-            }
-            if (Model.Rooms.Any())
-            {
-                <!-- Sidebar -->
-                <div class="bg-light border-right" id="sidebar-wrapper">
-                    <div class="sidebar-heading">SignalRProject </div>
-                    <div class="list-group list-group-flush">
-                        @foreach (var room in Model.Rooms)
-                        {
-                            <a href="#" class="list-group-item list-group-item-action bg-light">@room.Name</a>
-                        }
-                    </div>
-                </div>
-                <!-- /#sidebar-wrapper -->
-            }
 
-        }
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <div class="sidebar-heading">SignalRProject </div>
+            <div class="list-group list-group-flush">
+                <button class="btn btn-light" data-toggle="modal" data-target="#addRoomModal"><i class="fas fa-plus"></i> room</button>
+                @if (Model.Rooms.Any())
+                {
+                    @foreach (var room in Model.Rooms)
+                    {
+                        <a onclick="" class="list-group-item list-group-item-action bg-light">
+                            <img class="room-avatar" src="~/@room.Photo">@room.Name
+                        </a>
+                    }
+                }
+            </div>
+        </div>
         <!-- Page Content -->
         <div id="page-content-wrapper">
             <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -87,6 +76,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/custom/home.js"></script>
     <script src="~/js/custom/auth.js"></script>
+    <script src="~/js/custom/room.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

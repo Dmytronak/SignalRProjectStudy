@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using SignalRProject.BusinessLogic.Services.Interfaces;
 using System;
 using System.Threading.Tasks;
 
@@ -9,6 +10,21 @@ namespace SignalRProject.BusinessLogic.Hubs
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HubChat : Hub
     {
+        #region Properties
+
+        private readonly IChatService _chatService;
+
+        #endregion Properties
+
+        #region Constructor
+
+        public HubChat(IChatService chatService)
+        {
+            _chatService = chatService;
+        }
+
+        #endregion Constructor
+
         #region Notify
 
         public override async Task OnConnectedAsync()

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SignalRProject.Web.Controllers
 {
     [Authorize]
-    public class ChatController : Controller
+    public class ChatController : BaseController
     {
         private readonly IChatService _chatService;
 
@@ -19,15 +19,15 @@ namespace SignalRProject.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _chatService.GetAllRooms();
+            var response = await _chatService.GetAllRooms(UserId);
             return View(response);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateRoom(CreateRoomChatView model)
         {
-            await _chatService.CreateRoom(model);
-            return Ok();
+            await _chatService.CreateRoom(model,UserId);
+            return Redirect("Index");
         }
     }
 }

@@ -8,5 +8,6 @@ namespace SignalRProject.DataAccess.Repositories.EntityFramework
         public RoomRepository(ApplicationContext context) : base(context)
         {
         }
+
     }
 }

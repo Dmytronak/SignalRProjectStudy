@@ -8,7 +8,8 @@ namespace SignalRProject.DataAccess
     {
         public DbSet<Message> Messages { get; set; }
         public DbSet<Room> Rooms { get; set; }
-
+        public DbSet<UserInRoom> UserInRooms { get; set; }
+        public DbSet<MessageInRoom> MessageInRooms { get; set; }
 
         public ApplicationContext(DbContextOptions<ApplicationContext> options) 
             : base(options)

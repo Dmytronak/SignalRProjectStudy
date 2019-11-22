@@ -14,10 +14,14 @@ namespace SignalRProject.BusinessLogic
         {
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IMessageInRoomRepository, MessageInRoomRepository>();
+            services.AddTransient<IUserInRoomRepository, UserInRoomRepository>();
 
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IJwtProvider, JwtProvider>();
+            services.AddTransient<IImageProvider, ImageProvider>();
         }
     }
 }

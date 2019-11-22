@@ -5,7 +5,7 @@ namespace SignalRProject.BusinessLogic.Services.Interfaces
 {
     public interface IChatService
     {
-        Task<GetAllRoomsChatView> GetAllRooms();
-        Task CreateRoom(CreateRoomChatView model);
+        Task<GetAllRoomsChatView> GetAllRooms(string userId);
+        Task CreateRoom(CreateRoomChatView model, string userId);
     }
 }

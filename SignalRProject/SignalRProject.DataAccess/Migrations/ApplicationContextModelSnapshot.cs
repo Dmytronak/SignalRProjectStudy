@@ -162,15 +162,12 @@ namespace SignalRProject.DataAccess.Migrations
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.ToTable("Messages");
                 });
 
-            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Room", b =>
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.MessageInRoom", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -182,20 +179,34 @@ namespace SignalRProject.DataAccess.Migrations
                     b.Property<Guid>("MessageId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("MessageInRooms");
+                });
+
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Room", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("MessageId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Rooms");
                 });
@@ -277,6 +288,30 @@ namespace SignalRProject.DataAccess.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.UserInRoom", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("RoomId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserInRooms");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -328,11 +363,26 @@ namespace SignalRProject.DataAccess.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SignalRProject.DataAccess.Entities.Room", b =>
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.MessageInRoom", b =>
                 {
                     b.HasOne("SignalRProject.DataAccess.Entities.Message", "Message")
                         .WithMany()
                         .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SignalRProject.DataAccess.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SignalRProject.DataAccess.Entities.UserInRoom", b =>
+                {
+                    b.HasOne("SignalRProject.DataAccess.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

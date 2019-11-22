@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SignalRProject.DataAccess.Migrations
 {
-    public partial class AddingBaseDatabase : Migration
+    public partial class CreateBase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -56,12 +56,25 @@ namespace SignalRProject.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CreationAt = table.Column<DateTime>(nullable: false),
-                    Timestamp = table.Column<DateTime>(nullable: false),
                     Text = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Rooms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreationAt = table.Column<DateTime>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    Photo = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,27 +184,51 @@ namespace SignalRProject.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Rooms",
+                name: "MessageInRooms",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CreationAt = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    Photo = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true),
+                    RoomId = table.Column<Guid>(nullable: false),
                     MessageId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Rooms", x => x.Id);
+                    table.PrimaryKey("PK_MessageInRooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Rooms_Messages_MessageId",
+                        name: "FK_MessageInRooms_Messages_MessageId",
                         column: x => x.MessageId,
                         principalTable: "Messages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Rooms_AspNetUsers_UserId",
+                        name: "FK_MessageInRooms_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserInRooms",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreationAt = table.Column<DateTime>(nullable: false),
+                    RoomId = table.Column<Guid>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserInRooms", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserInRooms_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserInRooms_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -238,13 +275,23 @@ namespace SignalRProject.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_MessageId",
-                table: "Rooms",
+                name: "IX_MessageInRooms_MessageId",
+                table: "MessageInRooms",
                 column: "MessageId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_UserId",
-                table: "Rooms",
+                name: "IX_MessageInRooms_RoomId",
+                table: "MessageInRooms",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInRooms_RoomId",
+                table: "UserInRooms",
+                column: "RoomId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInRooms_UserId",
+                table: "UserInRooms",
                 column: "UserId");
         }
 
@@ -266,13 +313,19 @@ namespace SignalRProject.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Rooms");
+                name: "MessageInRooms");
+
+            migrationBuilder.DropTable(
+                name: "UserInRooms");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

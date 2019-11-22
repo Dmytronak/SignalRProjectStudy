@@ -94,8 +94,15 @@ body {
 }
 
 .chat-container {
-    height: 700px;
-    overflow: auto;
+    width: 900px;
+    height: 750px;
+    float: left;
+    overflow-y: auto;
+}
+.users-container {
+    float: right;
+    height: 750px;
+    overflow-y: auto;
 }
 
     .chat-container .message {
@@ -145,13 +152,13 @@ body {
 }
 
 .card-login {
-    width: 600px;
+    max-width: 600px;
     margin: 0 auto; /* Added */
     float: none; /* Added */
     margin-bottom: 10px; /* Added */
 }
 .card-register {
-    width: 600px;
+    max-width: 600px;
     margin: 0 auto; /* Added */
     float: none; /* Added */
     margin-bottom: 10px; /* Added */

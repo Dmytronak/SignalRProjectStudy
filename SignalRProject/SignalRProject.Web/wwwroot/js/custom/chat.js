@@ -55,3 +55,9 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     });
     event.preventDefault();
 });
+
+/* Auto scroll */
+$(".chat-container").stop().animate({
+    scrollTop: $('.chat-container')[0].scrollHeight
+}, 1000);
+/* Auto scroll */

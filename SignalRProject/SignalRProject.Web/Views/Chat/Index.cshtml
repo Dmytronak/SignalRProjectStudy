@@ -1,13 +1,18 @@
 ﻿@using SignalRProject.ViewModels
 
-@{ 
+@{
 
     ViewData["Title"] = "Chat Page";
-     Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container">
     <div class="chat-container" id="messagesList">
+    </div>
+    <div class="users-container">
+        <p><b>Все пользователи</b></p>
+        <p><b>Все пользователи</b></p>
+
     </div>
     <div class="send-message-form">
         <div class="row input-group">
@@ -21,6 +26,10 @@
         </div>
     </div>
 </div>
+
+@{
+    await Html.RenderPartialAsync("~/Views/Shared/Partials/CreateNewRoom.cshtml");
+}
 
 <script>
     var userEmail = '@User?.Identity?.Name';

@@ -22,6 +22,5 @@ namespace SignalRProject.ViewModels.ChatViewModel
 
         public string Photo { get; set; }
 
-        public string UserId { get; set; }
     }
 }
