@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SignalRProject.ViewModels.AuthViewModel
+namespace SignalRProject.ViewModels.AuthViews
 {
     public class GetAllAuthView
     {

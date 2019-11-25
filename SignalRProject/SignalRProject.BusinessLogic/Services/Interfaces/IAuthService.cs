@@ -1,4 +1,4 @@
-﻿using SignalRProject.ViewModels.AuthViewModel;
+﻿using SignalRProject.ViewModels.AuthViews;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Services.Interfaces

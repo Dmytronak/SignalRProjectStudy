@@ -1,11 +1,13 @@
-﻿using SignalRProject.ViewModels.ChatViewModel;
+﻿using SignalRProject.ViewModels.ChatViews;
+using System;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Services.Interfaces
 {
     public interface IChatService
     {
-        Task<GetAllRoomsChatView> GetAllRooms(string userId);
+        Task<GetAllRoomsChatView> GetByUserId(string userId);
         Task CreateRoom(CreateRoomChatView model, string userId);
+        Task<GetRoomChatView> GetRoomById(Guid roomId);
     }
 }

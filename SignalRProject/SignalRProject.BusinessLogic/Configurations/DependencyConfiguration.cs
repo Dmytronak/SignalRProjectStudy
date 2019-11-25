@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SignalRProject.BusinessLogic.Fabrics;
+using SignalRProject.BusinessLogic.Fabrics.Interfaces;
 using SignalRProject.BusinessLogic.Providers;
 using SignalRProject.BusinessLogic.Providers.Interfaces;
 using SignalRProject.BusinessLogic.Services;
@@ -20,8 +22,11 @@ namespace SignalRProject.BusinessLogic
 
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IChatService, ChatService>();
+
             services.AddTransient<IJwtProvider, JwtProvider>();
             services.AddTransient<IImageProvider, ImageProvider>();
+
+            services.AddTransient<IChatMenuItemsFabric, ChatMenuItemsFabric>();
         }
     }
 }

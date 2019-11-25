@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SignalRProject.BusinessLogic.Services.Interfaces;
-using SignalRProject.ViewModels.AuthViewModel;
+using SignalRProject.ViewModels.AuthViews;
 
 namespace SignalRProject.Web.Controllers
 {
-    public class AuthController : BaseController
+    public class AuthController : Controller
     {
         private readonly IAuthService _authService;
         public AuthController(IAuthService authService)

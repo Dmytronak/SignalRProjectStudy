@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SignalRProject.ViewModels.AuthViewModel
+namespace SignalRProject.ViewModels.AuthViews
 {
     public class LoginAuthView
     {

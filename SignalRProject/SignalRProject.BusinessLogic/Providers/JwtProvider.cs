@@ -28,6 +28,7 @@ namespace SignalRProject.BusinessLogic.Providers
                 new Claim(ClaimTypes.Name, user.Id),
                 new Claim(ClaimTypes.NameIdentifier, user.UserName)
             };
+
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddHours(Convert.ToDouble(_options.ExpireHours));

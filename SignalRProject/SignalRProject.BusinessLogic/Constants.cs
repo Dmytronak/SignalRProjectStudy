@@ -17,6 +17,7 @@
         public static class FilePaths
         {
             public static readonly string RoomAvatarImages = @"uploaded-images\rooms\icons";
+            public static readonly string UserAvatarImages = @"uploaded-images\users\icons";
         }
     }
 }

@@ -31,8 +31,7 @@ namespace SignalRProject.Web
             services.AddSignalRConfiguration();
             services.AddCookiesConfiguration();
             services.AddJwtConfiguration(Configuration);
-
-
+            services.AddAutoMapperConfiguration();
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ModelStateActionFilter));

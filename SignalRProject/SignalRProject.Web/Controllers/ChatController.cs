@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SignalRProject.BusinessLogic.Fabrics.Interfaces;
 using SignalRProject.BusinessLogic.Services.Interfaces;
-using SignalRProject.ViewModels.ChatViewModel;
+using SignalRProject.ViewModels.ChatViews;
+using System;
 using System.Threading.Tasks;
 
 namespace SignalRProject.Web.Controllers
@@ -11,15 +13,21 @@ namespace SignalRProject.Web.Controllers
     {
         private readonly IChatService _chatService;
 
-        public ChatController(IChatService chatService)
+        public ChatController(IChatService chatService, IChatMenuItemsFabric chatMenuItemsFabric) : base(chatMenuItemsFabric)
         {
             _chatService = chatService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var response = await _chatService.GetAllRooms(UserId);
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Room(Guid roomId)
+        {
+            var response = await _chatService.GetRoomById(roomId);
             return View(response);
         }
 

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace SignalRProject.ViewModels.ChatViewModel
+namespace SignalRProject.ViewModels.ChatViews
 {
     public class GetAllRoomsChatView
     {

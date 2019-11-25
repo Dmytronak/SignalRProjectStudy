@@ -1,7 +1,4 @@
-﻿@using SignalRProject.ViewModels
-
-@model SignalRProject.ViewModels.ChatViewModel.GetAllRoomsChatView
-
+﻿@using SignalRProject.ViewModels.MenuViewModel
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,20 +12,21 @@
 </head>
 <body>
     <div class="d-flex" id="wrapper">
-
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading">SignalRProject </div>
             <div class="list-group list-group-flush">
                 <button class="btn btn-light" data-toggle="modal" data-target="#addRoomModal"><i class="fas fa-plus"></i> room</button>
-                @if (Model.Rooms.Any())
-                {
-                    @foreach (var room in Model.Rooms)
+                @{
+                    ChatMenuView chats = ViewData["Chats"] as ChatMenuView;
+
+                    foreach (MenuChatViewItem room in chats.Items)
                     {
-                        <a onclick="" class="list-group-item list-group-item-action bg-light">
+                        <a onclick="getRoomById('@room.Id')" class="list-group-item list-group-item-action bg-light">
                             <img class="room-avatar" src="~/@room.Photo">@room.Name
                         </a>
                     }
                 }
+
             </div>
         </div>
         <!-- Page Content -->

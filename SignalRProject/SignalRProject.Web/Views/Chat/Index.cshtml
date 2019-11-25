@@ -1,36 +1,14 @@
-﻿@using SignalRProject.ViewModels
-
-@{
+﻿@{
 
     ViewData["Title"] = "Chat Page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<div class="container">
-    <div class="chat-container" id="messagesList">
-    </div>
-    <div class="users-container">
-        <p><b>Все пользователи</b></p>
-        <p><b>Все пользователи</b></p>
-
-    </div>
-    <div class="send-message-form">
-        <div class="row input-group">
-            <div class="col-1 text-center-padding">Message</div>
-            <div class="col-9">
-                <textarea id="messageInput"></textarea>
-            </div>
-            <div class="col-2">
-                <button class="btn btn-primary btn-block" id="sendButton">Send Message</button>
-            </div>
+    <div class="jumbotron">
+        <div class="container">
+            <h6 class="display-4">Greating in chat app, choose your room!</h6>
         </div>
     </div>
-</div>
 
 @{
     await Html.RenderPartialAsync("~/Views/Shared/Partials/CreateNewRoom.cshtml");
 }
-
-<script>
-    var userEmail = '@User?.Identity?.Name';
-</script>

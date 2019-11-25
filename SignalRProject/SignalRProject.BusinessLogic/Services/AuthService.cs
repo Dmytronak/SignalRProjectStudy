@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SignalRProject.BusinessLogic.Providers.Interfaces;
 using SignalRProject.BusinessLogic.Services.Interfaces;
 using SignalRProject.DataAccess.Entities;
-using SignalRProject.ViewModels.AuthViewModel;
+using SignalRProject.ViewModels.AuthViews;
 using System;
 using System.Collections.Generic;
 using System.Linq;

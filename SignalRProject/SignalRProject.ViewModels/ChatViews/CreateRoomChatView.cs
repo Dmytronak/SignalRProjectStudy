@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace SignalRProject.ViewModels.ChatViewModel
+namespace SignalRProject.ViewModels.ChatViews
 {
     public class CreateRoomChatView
     {

@@ -1,4 +1,4 @@
-﻿namespace SignalRProject.ViewModels.AuthViewModel
+﻿namespace SignalRProject.ViewModels.AuthViews
 {
     public class LoginAuthResponseView
     {

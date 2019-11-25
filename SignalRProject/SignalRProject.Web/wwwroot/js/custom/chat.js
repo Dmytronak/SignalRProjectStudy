@@ -3,7 +3,7 @@ let token = localStorage.getItem('access_token');
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub", { accessTokenFactory: () => token })
     .build();
-
+debugger
 document.getElementById("sendButton").disabled = true;
 
 connection.on('Notify', function (message) {
@@ -61,3 +61,11 @@ $(".chat-container").stop().animate({
     scrollTop: $('.chat-container')[0].scrollHeight
 }, 1000);
 /* Auto scroll */
+
+function getRoomById(id) {
+    const href = `/chat/room?roomId=${id}`;
+    window.location = href;
+}
+
+
+
