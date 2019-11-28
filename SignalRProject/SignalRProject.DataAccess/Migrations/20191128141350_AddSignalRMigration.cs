@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SignalRProject.DataAccess.Migrations
 {
-    public partial class CreateBase : Migration
+    public partial class AddSignalRMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,7 +43,8 @@ namespace SignalRProject.DataAccess.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Photo = table.Column<string>(nullable: true),
-                    Age = table.Column<int>(nullable: false)
+                    Age = table.Column<int>(nullable: false),
+                    CurrentRoomId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

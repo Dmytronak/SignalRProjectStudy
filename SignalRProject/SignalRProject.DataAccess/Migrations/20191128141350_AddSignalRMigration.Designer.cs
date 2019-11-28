@@ -10,8 +10,8 @@ using SignalRProject.DataAccess;
 namespace SignalRProject.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191122142256_CreateBase")]
-    partial class CreateBase
+    [Migration("20191128141350_AddSignalRMigration")]
+    partial class AddSignalRMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -227,6 +227,9 @@ namespace SignalRProject.DataAccess.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("CurrentRoomId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")

@@ -18,15 +18,16 @@ namespace SignalRProject.BusinessLogic.Services
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private readonly IJwtProvider _jwtProvider;
-
+        private readonly IImageProvider _imageProvider;
         #endregion Properties
 
         #region Constructor
-        public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, IJwtProvider jwtProvider)
+        public AuthService(SignInManager<User> signInManager, UserManager<User> userManager, IJwtProvider jwtProvider, IImageProvider imageProvider)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtProvider = jwtProvider;
+            _imageProvider = imageProvider;
         }
 
         #endregion Constructor
@@ -50,6 +51,26 @@ namespace SignalRProject.BusinessLogic.Services
             return response;
         }
 
+        public async Task<GetUserView> GetbyId(string userId)
+        {
+            User user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                throw new Exception("User is not find");
+            }
+
+            GetUserView response = new GetUserView
+            {
+                Age = user.Age,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Photo = user.Photo
+            
+            };
+            return response;
+        }
+
         public async Task<LoginAuthResponseView> Register(RegisterAuthView model)
         {
             User user = new User
@@ -60,6 +81,11 @@ namespace SignalRProject.BusinessLogic.Services
                 FirstName = model.FirstName,
                 LastName = model.LastName
             };
+
+            if (model.Photo!=null)
+            {
+                user.Photo = _imageProvider.ResizeAndSave(model.Photo, Constants.FilePaths.UserAvatarImages, $"{user.Id}.png", Constants.DefaultIconSizes.MaxWidthOriginalImage, Constants.DefaultIconSizes.MaxHeightOriginalImage);
+            }
 
             IdentityResult result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace SignalRProject.ViewModels.AuthViews
 {
@@ -12,6 +13,8 @@ namespace SignalRProject.ViewModels.AuthViews
 
         [Required(ErrorMessage = "LastName is required")]
         public string LastName { get; set; }
+
+        public IFormFile Photo { get; set; }
 
         [Required(ErrorMessage = "Age is required")]
         public int Age { get; set; }

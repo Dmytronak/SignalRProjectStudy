@@ -20,24 +20,7 @@
 
 function register(event) {
     event.preventDefault();
-    let loginData = $('#registerForm').serialize();
-    $.ajax({
-        type: 'POST',
-        url: '/auth/register',
-        data: loginData,
-        success: (function (response) {
-            if (response.token) {
-                window.location = '/auth/login';
-                console.log(response.token);
-            }
-            console.log(response.token);
-        }),
-        error: (function (error) {
-            $('#registerErrorMessage').text(`${error.statusText} try again`)
-            $('#registerErrorMessage').removeClass("d-none");
-            
-        })
-    });
+    $("#registerForm")[0].submit();
 }
 
 function logOut() {

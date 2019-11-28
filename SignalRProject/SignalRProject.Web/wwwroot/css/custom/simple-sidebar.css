@@ -48,3 +48,9 @@ body {
     border-radius: 50%;
     margin-right: 5px;
 }
+.user-avatar {
+    border-radius: 50%;
+    margin-right: 5px;
+    width:61%;
+    float:right;
+}

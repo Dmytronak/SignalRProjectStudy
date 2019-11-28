@@ -9,5 +9,6 @@ namespace SignalRProject.BusinessLogic.Services.Interfaces
         Task<GetAllRoomsChatView> GetByUserId(string userId);
         Task CreateRoom(CreateRoomChatView model, string userId);
         Task<GetRoomChatView> GetRoomById(Guid roomId);
+        Task<GetAllMessagesChatView> GetAllMessagesByRoomId(Guid roomId);
     }
 }

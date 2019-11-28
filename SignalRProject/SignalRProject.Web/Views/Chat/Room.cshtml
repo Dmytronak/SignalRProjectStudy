@@ -6,12 +6,13 @@
 }
 
 <div class="container">
+    <p class="col-12" id="roomName">@Model.Name</p>
     <div class="chat-container" id="messagesList">
     </div>
     <div class="users-container">
         @foreach (var user in Model.Users)
         {
-            <p><img src="@user.Photo" a/><b>@user.FirstName @user.LastName</b></p>
+            <p><img src="@user.Photo" a /><b>@user.FirstName @user.LastName</b></p>
         }
 
 
@@ -28,10 +29,14 @@
         </div>
     </div>
 </div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/custom/chat.js"></script>
+<script src="~/js/custom/room.js"></script>
+
 <script>
 
     var userEmail = '@User?.Identity?.Name';
-
     var roomChatView = @Html.Raw(Json.Serialize(Model));
 
 </script>

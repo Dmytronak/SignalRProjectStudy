@@ -41,8 +41,8 @@ namespace SignalRProject.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterAuthView model)
         {
-            var response = await _authService.Register(model);
-            return Ok(response);
+            await _authService.Register(model);
+            return Redirect("~/Auth/Login");
         }
         
         [HttpGet]

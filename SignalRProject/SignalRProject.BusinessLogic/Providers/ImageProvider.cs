@@ -10,7 +10,6 @@ namespace SignalRProject.BusinessLogic.Providers
     public class ImageProvider : IImageProvider
     {
         private readonly IWebHostEnvironment _webHostEnvironment;
-
         public ImageProvider(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;

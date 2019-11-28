@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SignalRProject.BusinessLogic.Providers.Interfaces;
 using SignalRProject.BusinessLogic.Services.Interfaces;
 using SignalRProject.DataAccess.Entities;
@@ -14,7 +15,7 @@ namespace SignalRProject.BusinessLogic.Services
     public class ChatService : IChatService
     {
         #region Properties
-
+        private readonly UserManager<User> _userManager;
         private readonly IRoomRepository _roomRepository;
         private readonly IUserInRoomRepository _userInRoomRepository;
         private readonly IMessageRepository _messageRepository;
@@ -26,7 +27,7 @@ namespace SignalRProject.BusinessLogic.Services
 
         #region Constructor
 
-        public ChatService(IMapper mapper, IRoomRepository roomRepository, IMessageRepository messageRepository, IImageProvider imageProvider, IUserInRoomRepository userInRoomRepository, IMessageInRoomRepository messageInRoomRepository)
+        public ChatService(UserManager<User> userManager, IMapper mapper, IRoomRepository roomRepository, IMessageRepository messageRepository, IImageProvider imageProvider, IUserInRoomRepository userInRoomRepository, IMessageInRoomRepository messageInRoomRepository)
         {
             _roomRepository = roomRepository;
             _userInRoomRepository = userInRoomRepository;
@@ -34,6 +35,7 @@ namespace SignalRProject.BusinessLogic.Services
             _imageProvider = imageProvider;
             _messageInRoomRepository = messageInRoomRepository;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         #endregion Constructor
@@ -72,16 +74,30 @@ namespace SignalRProject.BusinessLogic.Services
             result = _mapper.Map(room, result);
             result.Users = _mapper.Map(userInRoom, result.Users);
             result.Messages = _mapper.Map(messageInRooms, result.Messages);
-            if (!result.Messages.Any())
-            {
-                result.Messages.Add(new MessageGetRoomChatViewItem { Id = Guid.NewGuid(), Text = "ERRRROORRR" });
-            }
 
             return result;
         }
 
-        public async Task CreateRoom(CreateRoomChatView model,string userId)
+        public async Task<GetAllMessagesChatView> GetAllMessagesByRoomId(Guid roomId)
         {
+            GetAllMessagesChatView result = new GetAllMessagesChatView();
+
+            List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetByRoomId(roomId);
+            if (!messageInRooms.Any())
+            {
+                return result;
+            }
+
+            result.RoomId = roomId;
+            result.Messages = _mapper.Map(messageInRooms, result.Messages);
+
+            return result;
+        }
+
+        public async Task CreateRoom(CreateRoomChatView model, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+          
             Room room = new Room
             {
                 Name = model.Name,
@@ -92,6 +108,8 @@ namespace SignalRProject.BusinessLogic.Services
                 room.Photo = _imageProvider.ResizeAndSave(model.Photo,Constants.FilePaths.RoomAvatarImages, $"{room.Id}.png",Constants.DefaultIconSizes.MaxWidthOriginalImage,Constants.DefaultIconSizes.MaxHeightOriginalImage);
             }
 
+            user.CurrentRoomId = room.Id;
+
             UserInRoom userInRoom = new UserInRoom()
             {
                 RoomId = room.Id,
@@ -100,6 +118,7 @@ namespace SignalRProject.BusinessLogic.Services
 
             await _roomRepository.Create(room);
             await _userInRoomRepository.Create(userInRoom);
+            await _userManager.UpdateAsync(user);
         }
 
         #endregion Public Methods

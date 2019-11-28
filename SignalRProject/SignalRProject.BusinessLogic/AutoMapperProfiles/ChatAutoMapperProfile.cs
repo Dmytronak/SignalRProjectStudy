@@ -41,6 +41,15 @@ namespace SignalRProject.BusinessLogic.AutoMapperProfiles
                    options => options.MapFrom(source => source.Message.Id))
                .ForMember(destination => destination.Text,
                    options => options.MapFrom(source => source.Message.Text));
+
+            CreateMap<MessageInRoom, MessageGetAllMessagesChatViewItem>()
+             .ForMember(destination => destination.Id,
+                 options => options.MapFrom(source => source.Message.Id))
+               .ForMember(destination => destination.CreationAt,
+                 options => options.MapFrom(source => source.Message.CreationAt))
+             .ForMember(destination => destination.Text,
+                 options => options.MapFrom(source => source.Message.Text));
+
             #endregion
         }
     }

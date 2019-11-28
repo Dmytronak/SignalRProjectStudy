@@ -2,13 +2,16 @@
 let token = localStorage.getItem('access_token');
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub", { accessTokenFactory: () => token })
+    .configureLogging({
+        log: function (logLevel, message) {
+            console.log(new Date().toISOString() + ": " + message);
+        }
+    })
     .build();
-debugger
+
 document.getElementById("sendButton").disabled = true;
 
 connection.on('Notify', function (message) {
-
-    // добавляет элемент для диагностического сообщения
     let notifyElem = document.createElement("b");
     notifyElem.appendChild(document.createTextNode(message));
     let elem = document.createElement("p");
@@ -25,9 +28,8 @@ connection.on("ReceiveMessage", function (user, message) {
     const yyyy = today.getFullYear();
     const how = today.getHours();
     const min = today.getMinutes();
-
+    debugger
     today = `${mm}/${dd}/${yyyy} ${how}:${min}`;
-
     const messegeDiv = document.createElement('div');
     messegeDiv.className = 'message';
 
@@ -56,16 +58,7 @@ document.getElementById("sendButton").addEventListener("click", function (event)
     event.preventDefault();
 });
 
-/* Auto scroll */
-$(".chat-container").stop().animate({
-    scrollTop: $('.chat-container')[0].scrollHeight
-}, 1000);
-/* Auto scroll */
-
-function getRoomById(id) {
-    const href = `/chat/room?roomId=${id}`;
-    window.location = href;
-}
-
-
-
+window.setInterval(function () {
+    var elem = document.getElementsByClassName('chat-container')[0];
+    elem.scrollTop = elem.scrollHeight;
+}, 5000);

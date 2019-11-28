@@ -4,7 +4,7 @@
 }
     <div class="card-register">
         <h2 class="card-body">Register</h2>
-        <form class="card-register" id="registerForm">
+        <form class="card-register" id="registerForm" asp-action="Register" asp-controller="Auth" method="post" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label>Email</label>
@@ -25,7 +25,11 @@
                     <input type="text" class="form-control" id="" placeholder="LastName" name="LastName">
                 </div>
             </div>
-            
+            <div class="form-group">
+                <label>Image</label>
+                <input name="Photo" class="form-control" type="file" onchange="loadFile(event)">
+                <img id="output" />
+            </div>
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" class="form-control" id="" placeholder="Password" name="Password">

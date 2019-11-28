@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SignalRProject.BusinessLogic.Services.Interfaces;
+using SignalRProject.ViewModels.ChatViews;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Hubs
@@ -25,11 +27,19 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         #endregion Constructor
 
-        #region Notify
+        #region OnConnectedAsync/OnDisconnectedAsync
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("Notify", $"Greetings  {Context.UserIdentifier}");
+            GetAllRoomsChatView userInRoom = await _chatService.GetByUserId(Context.User.Identity.Name);
+
+            foreach (var room in userInRoom.Rooms)
+            {
+                await Groups.AddToGroupAsync(Context.ConnectionId, room.Name);
+                await Clients.Group(room.Name).SendAsync("Notify", $"Greetings  {Context.UserIdentifier}");
+            }
+
+            //await Clients.All.SendAsync("Notify", $"Greetings  {Context.UserIdentifier}");
             await base.OnConnectedAsync();
         }
         public override async Task OnDisconnectedAsync(Exception exception)
@@ -38,7 +48,7 @@ namespace SignalRProject.BusinessLogic.Hubs
             await base.OnDisconnectedAsync(exception);
         }
 
-        #endregion Notify
+        #endregion OnConnected/OnDisconnected
 
         #region SendingMessages
 

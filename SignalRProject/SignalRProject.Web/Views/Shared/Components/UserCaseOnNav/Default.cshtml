@@ -1,0 +1,22 @@
+﻿@model SignalRProject.ViewModels.AuthViews.GetUserView
+@{
+
+    Layout = null;
+}
+<div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Chat" asp-action="Index">Home</a>
+        </li>
+        <li class="nav-item">
+            <img src="~/@Model.Photo" alt="UserPhoto" class="user-avatar" />
+        </li>
+        <li class="nav-item"> 
+         
+            <a class="nav-link text-dark">@Model.FirstName @Model.LastName</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark cursor-pointer" onclick="logOut()">Log Out</a>
+        </li>
+    </ul>
+</div>
