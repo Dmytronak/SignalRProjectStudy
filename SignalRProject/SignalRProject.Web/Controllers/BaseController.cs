@@ -23,7 +23,7 @@ namespace SignalRProject.Web.Controllers
         {
             base.OnActionExecuting(context);
 
-            ChatMenuView menu = _chatMenuItemsFabric.BuildChatMenu(UserId);
+            ChatMenuView menu = _chatMenuItemsFabric.BuildChatMenu();
             ViewData["Chats"] = menu;
         }
 

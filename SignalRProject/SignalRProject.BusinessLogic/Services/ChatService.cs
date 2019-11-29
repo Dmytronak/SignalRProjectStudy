@@ -44,23 +44,23 @@ namespace SignalRProject.BusinessLogic.Services
 
         public async Task<GetAllRoomsChatView> GetByUserId(string userId)
         {
-            GetAllRoomsChatView result = new GetAllRoomsChatView();
+            GetAllRoomsChatView response = new GetAllRoomsChatView();
 
             List<UserInRoom> userInRooms = await _userInRoomRepository.GetByUserId(userId);
 
             if (!userInRooms.Any())
             {
-                return result;
+                return response;
             }
 
-            result.Rooms = _mapper.Map(userInRooms, result.Rooms);
+            response.Rooms = _mapper.Map(userInRooms, response.Rooms);
 
-            return result;
+            return response;
         }
 
         public async Task<GetRoomChatView> GetRoomById(Guid roomId)
         {
-            GetRoomChatView result = new GetRoomChatView();
+            GetRoomChatView response = new GetRoomChatView();
 
             Room room = await _roomRepository.GetById(roomId);
             List<UserInRoom> userInRoom = await _userInRoomRepository.GetByRoomId(roomId);
@@ -68,30 +68,30 @@ namespace SignalRProject.BusinessLogic.Services
 
             if(room == null)
             {
-                return result;
+                return response;
             }
 
-            result = _mapper.Map(room, result);
-            result.Users = _mapper.Map(userInRoom, result.Users);
-            result.Messages = _mapper.Map(messageInRooms, result.Messages);
+            response = _mapper.Map(room, response);
+            response.Users = _mapper.Map(userInRoom, response.Users);
+            response.Messages = _mapper.Map(messageInRooms, response.Messages);
 
-            return result;
+            return response;
         }
 
         public async Task<GetAllMessagesChatView> GetAllMessagesByRoomId(Guid roomId)
         {
-            GetAllMessagesChatView result = new GetAllMessagesChatView();
+            GetAllMessagesChatView response = new GetAllMessagesChatView();
 
             List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetByRoomId(roomId);
             if (!messageInRooms.Any())
             {
-                return result;
+                return response;
             }
 
-            result.RoomId = roomId;
-            result.Messages = _mapper.Map(messageInRooms, result.Messages);
+            response.RoomId = roomId;
+            response.Messages = _mapper.Map(messageInRooms, response.Messages);
 
-            return result;
+            return response;
         }
 
         public async Task CreateRoom(CreateRoomChatView model, string userId)
@@ -119,6 +119,70 @@ namespace SignalRProject.BusinessLogic.Services
             await _roomRepository.Create(room);
             await _userInRoomRepository.Create(userInRoom);
             await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<GetAllRoomsChatView> GetAllRooms()
+        {
+            GetAllRoomsChatView response = new GetAllRoomsChatView();
+
+            List<Room> rooms = await _roomRepository.GetAll();
+
+            if (!rooms.Any())
+            {
+                return response;
+            }
+
+            response.Rooms = _mapper.Map(rooms, response.Rooms);
+
+            return response;
+        }
+         
+        public async Task<GetUserCurrentRoomChatView> GetUserCurrentRoomByUserId(string userId)
+        {
+            User user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new Exception("User is not find");
+            }
+
+            GetUserCurrentRoomChatView response = new GetUserCurrentRoomChatView();
+            response = _mapper.Map(user, response);
+
+            return response;
+
+        }
+
+        public async Task SetUserCurrentRoomByUserId(string userId, Guid roomId)
+        {
+            User user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new Exception("User is not find");
+            }
+
+            user.CurrentRoomId = roomId;
+
+            await _userManager.UpdateAsync(user);
+
+        }
+
+        public async Task CreateMessage(string messageText, Guid roomId, string userId)
+        {
+            Message message = new Message 
+            { 
+                Text = messageText, 
+                UserId = userId 
+            };
+
+            MessageInRoom messageInRoom = new MessageInRoom
+            {
+                RoomId = roomId,
+                MessageId = message.Id
+            };
+            await _messageRepository.Create(message);
+            await _messageInRoomRepository.Create(messageInRoom);
         }
 
         #endregion Public Methods

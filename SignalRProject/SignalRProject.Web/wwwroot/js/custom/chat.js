@@ -1,4 +1,5 @@
 ﻿"use strict";
+var currentRoomId;
 let token = localStorage.getItem('access_token');
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("/chatHub", { accessTokenFactory: () => token })
@@ -11,7 +12,7 @@ const connection = new signalR.HubConnectionBuilder()
 
 document.getElementById("sendButton").disabled = true;
 
-connection.on('Notify', function (message) {
+connection.on("UserConnected", function (message) {
     let notifyElem = document.createElement("b");
     notifyElem.appendChild(document.createTextNode(message));
     let elem = document.createElement("p");
@@ -20,23 +21,23 @@ connection.on('Notify', function (message) {
     document.getElementById("messagesList").insertBefore(elem, firstElem);
 });
 
-connection.on("ReceiveMessage", function (user, message) {
+connection.on("UserDisconnected", function (message) {
+    let notifyElem = document.createElement("b");
+    notifyElem.appendChild(document.createTextNode(message));
+    let elem = document.createElement("p");
+    elem.appendChild(notifyElem);
+    var firstElem = document.getElementById("messagesList").firstChild;
+    document.getElementById("messagesList").insertBefore(elem, firstElem);
+});
 
-    let today = new Date();
-    const dd = String(today.getDate()).padStart(2, '0');
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    const yyyy = today.getFullYear();
-    const how = today.getHours();
-    const min = today.getMinutes();
-    debugger
-    today = `${mm}/${dd}/${yyyy} ${how}:${min}`;
+connection.on("ReceiveMessage", function (user, userId, message, dateTime) {
+
     const messegeDiv = document.createElement('div');
     messegeDiv.className = 'message';
-
     messegeDiv.innerHTML = `
             <div class="nick-name">${user}</div>
-            <img class="avatar" src="https://placeimg.com/50/50/people?1">
-            <div class="datetime">${today}</div>
+            <img class="avatar" src="/uploaded-images/users/icons/${userId}.png">
+            <div class="datetime">${dateTime}</div>
             <p class="message-text">${message}</p
             `;
     document.getElementById("messagesList").appendChild(messegeDiv);
@@ -49,16 +50,34 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = userEmail;
-    var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
-        return console.error(err.toString());
-    });
-    event.preventDefault();
-});
-
 window.setInterval(function () {
     var elem = document.getElementsByClassName('chat-container')[0];
     elem.scrollTop = elem.scrollHeight;
 }, 5000);
+
+function SendMassage() {
+    var message = document.getElementById("messageInput").value;
+    var roomName = $('#roomName').text();
+
+    if (!roomName) {
+        connection.invoke("SendMessageToAll", message).catch(function (err) {
+            return console.error(err.toString());
+        });
+    }
+    if (roomName) {
+        connection.invoke("SendMessageToRoom", roomName, currentRoomId, message).catch(function (err) {
+            return console.error(err.toString());
+        });
+    }
+}
+
+function getRoomById(id, name) {
+    connection.invoke("JoinRoom", id, name).catch(function (err) {
+        return console.error(err.toString());
+    });
+    $('#roomName').text(name);
+    document.getElementById("messagesList").innerHTML = '';
+    $('.jumbotron').hide();
+    currentRoomId = id;
+
+}

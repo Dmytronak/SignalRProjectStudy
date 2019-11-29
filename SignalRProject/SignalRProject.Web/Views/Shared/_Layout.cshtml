@@ -21,7 +21,7 @@
 
                     foreach (MenuChatViewItem room in chats.Items)
                     {
-                        <a onclick="getRoomById('@room.Id')" class="list-group-item list-group-item-action bg-light">
+                        <a onclick="getRoomById('@room.Id','@room.Name')" class="list-group-item list-group-item-action bg-light">
                             <img class="room-avatar" src="~/@room.Photo">@room.Name
                         </a>
                     }
@@ -56,6 +56,8 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/signalr/dist/browser/signalr.js"></script>
+    <script src="~/js/custom/chat.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/custom/home.js"></script>
     <script src="~/js/custom/auth.js"></script>

@@ -2,9 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SignalRProject.BusinessLogic.Services.Interfaces;
-using SignalRProject.ViewModels.ChatViews;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Hubs
@@ -15,7 +13,7 @@ namespace SignalRProject.BusinessLogic.Hubs
         #region Properties
 
         private readonly IChatService _chatService;
-
+        private readonly DateTime _dateTime;
         #endregion Properties
 
         #region Constructor
@@ -23,6 +21,7 @@ namespace SignalRProject.BusinessLogic.Hubs
         public HubChat(IChatService chatService)
         {
             _chatService = chatService;
+            _dateTime = DateTime.UtcNow;
         }
 
         #endregion Constructor
@@ -31,45 +30,62 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            GetAllRoomsChatView userInRoom = await _chatService.GetByUserId(Context.User.Identity.Name);
-
-            foreach (var room in userInRoom.Rooms)
-            {
-                await Groups.AddToGroupAsync(Context.ConnectionId, room.Name);
-                await Clients.Group(room.Name).SendAsync("Notify", $"Greetings  {Context.UserIdentifier}");
-            }
-
-            //await Clients.All.SendAsync("Notify", $"Greetings  {Context.UserIdentifier}");
+            await Clients.All.SendAsync("UserConnected", $"{Context.UserIdentifier} join to converstion");
             await base.OnConnectedAsync();
         }
-        public override async Task OnDisconnectedAsync(Exception exception)
+
+        public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await Clients.All.SendAsync("Notify", $"{Context.UserIdentifier} has left a conversation");
-            await base.OnDisconnectedAsync(exception);
+            await Clients.All.SendAsync("UserDisconnected",$"{Context.UserIdentifier} has left converstion");
+            await base.OnDisconnectedAsync(ex);
         }
 
-        #endregion OnConnected/OnDisconnected
-
-        #region SendingMessages
-
-        public async Task SendMessage(string user, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", user, $"{Context.User.Identity.Name} {message}");
-        }
-
-        #endregion SendingMessages
+        #endregion OnConnectedAsync/OnDisconnectedAsync
 
         #region RoomActions
 
-        public async Task JoinRoom(string roomName)
+        public async Task SendMessageToAll(string message)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, roomName);
+            await Clients.All.SendAsync("ReceiveMessage", Context.UserIdentifier, Context.User.Identity.Name, message, $"{_dateTime}");
         }
 
-        public async Task LeaveRoom(string roomName)
+        public async Task SendMessageToRoom(string group, string roomId,string message)
         {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
+            await _chatService.CreateMessage(message, Guid.Parse(roomId), Context.User.Identity.Name);
+            await Clients.Group(group).SendAsync("ReceiveMessage", Context.UserIdentifier, Context.User.Identity.Name, message, $"{_dateTime}");
         }
+
+        public async Task SendMessageToCaller(string message)
+        {
+            await Clients.Caller.SendAsync("ReceiveMessage", message);
+        }
+
+        public async Task SendMessageToUser(string connectionId, string message)
+        {
+            await Clients.Client(connectionId).SendAsync("ReceiveMessage", message);
+        }
+
+        public async Task JoinRoom(string roomId, string group)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            await Clients.Group(group).SendAsync("UserConnected", $"{Context.UserIdentifier} join to converstion");
+            await _chatService.SetUserCurrentRoomByUserId(Context.User.Identity.Name, Guid.Parse(roomId));
+
+            var room = await _chatService.GetAllMessagesByRoomId(Guid.Parse(roomId));
+
+            foreach (var r in room.Messages)
+            {
+                await Clients.Group(group).SendAsync("ReceiveMessage", Context.UserIdentifier, Context.User.Identity.Name, r.Text, $"{r.CreationAt}");
+            }
+            
+        }
+
+        public async Task LeaveRoom(string group)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
+            await Clients.Group(group).SendAsync("UserConnected", $"{Context.UserIdentifier} has left converstion");
+        }
+
 
         #endregion RoomActions
 

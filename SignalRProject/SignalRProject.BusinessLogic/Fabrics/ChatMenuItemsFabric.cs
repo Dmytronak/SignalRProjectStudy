@@ -33,12 +33,12 @@ namespace SignalRProject.BusinessLogic.Fabrics
 
         #region Public Methods
 
-        public ChatMenuView BuildChatMenu(string userId)
+        public ChatMenuView BuildChatMenu()
         {
             ChatMenuView result = new ChatMenuView();
 
             GetAllRoomsChatView rooms = Task
-                .Run(async () => await _chatService.GetByUserId(userId))
+                .Run(async () => await _chatService.GetAllRooms())
                 .Result;
 
             if (!rooms.Rooms.Any()) 
