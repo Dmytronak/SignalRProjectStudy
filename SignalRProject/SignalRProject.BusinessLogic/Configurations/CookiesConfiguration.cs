@@ -13,7 +13,7 @@ namespace SignalRProject.BusinessLogic.Configurations
                 {
                     options.Cookie.Name = ".SignalRProjectCookieName";
                     options.Cookie.HttpOnly = true;
-                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    options.ExpireTimeSpan = TimeSpan.FromHours(1);
                     options.LoginPath = "/Auth/Login";
                     options.LogoutPath = "/";
                     options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;

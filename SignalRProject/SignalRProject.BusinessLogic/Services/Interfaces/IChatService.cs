@@ -9,10 +9,10 @@ namespace SignalRProject.BusinessLogic.Services.Interfaces
         Task<GetAllRoomsChatView> GetAllRooms();
         Task<GetAllRoomsChatView> GetByUserId(string userId);
         Task CreateRoom(CreateRoomChatView model, string userId);
-        Task<GetRoomChatView> GetRoomById(Guid roomId);
         Task<GetAllMessagesChatView> GetAllMessagesByRoomId(Guid roomId);
-        Task<GetUserCurrentRoomChatView> GetUserCurrentRoomByUserId(string userId);
+        Task<GetUserAndCurrentRoomChatView> GetUserAndCurrentRoomByUserId(string userId);
         Task SetUserCurrentRoomByUserId(string userId, Guid roomId);
-        Task CreateMessage(string messageText, Guid roomId, string userId);
+        Task<GetCreateMessageChatView> CreateMessage(string messageText, Guid roomId, string userId);
+        GetAllUsersChatView GetAllUsersByRoomId(Guid roomId);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using SignalRProject.BusinessLogic.Helpers.Interfaces;
 using SignalRProject.BusinessLogic.Providers.Interfaces;
 using SignalRProject.BusinessLogic.Services.Interfaces;
 using SignalRProject.DataAccess.Entities;
@@ -22,12 +23,15 @@ namespace SignalRProject.BusinessLogic.Services
         private readonly IMessageInRoomRepository  _messageInRoomRepository;
         private readonly IImageProvider _imageProvider;
         private readonly IMapper _mapper;
+        private readonly IDateTimeHelper _dateTimeHelper;
+
 
         #endregion Properties
 
         #region Constructor
 
-        public ChatService(UserManager<User> userManager, IMapper mapper, IRoomRepository roomRepository, IMessageRepository messageRepository, IImageProvider imageProvider, IUserInRoomRepository userInRoomRepository, IMessageInRoomRepository messageInRoomRepository)
+        public ChatService(UserManager<User> userManager, IDateTimeHelper dateTimeHelper, IMapper mapper, 
+            IRoomRepository roomRepository, IMessageRepository messageRepository, IImageProvider imageProvider, IUserInRoomRepository userInRoomRepository, IMessageInRoomRepository messageInRoomRepository)
         {
             _roomRepository = roomRepository;
             _userInRoomRepository = userInRoomRepository;
@@ -36,6 +40,7 @@ namespace SignalRProject.BusinessLogic.Services
             _messageInRoomRepository = messageInRoomRepository;
             _mapper = mapper;
             _userManager = userManager;
+            _dateTimeHelper = dateTimeHelper;
         }
 
         #endregion Constructor
@@ -58,38 +63,30 @@ namespace SignalRProject.BusinessLogic.Services
             return response;
         }
 
-        public async Task<GetRoomChatView> GetRoomById(Guid roomId)
-        {
-            GetRoomChatView response = new GetRoomChatView();
-
-            Room room = await _roomRepository.GetById(roomId);
-            List<UserInRoom> userInRoom = await _userInRoomRepository.GetByRoomId(roomId);
-            List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetByRoomId(roomId);
-
-            if(room == null)
-            {
-                return response;
-            }
-
-            response = _mapper.Map(room, response);
-            response.Users = _mapper.Map(userInRoom, response.Users);
-            response.Messages = _mapper.Map(messageInRooms, response.Messages);
-
-            return response;
-        }
-
         public async Task<GetAllMessagesChatView> GetAllMessagesByRoomId(Guid roomId)
         {
             GetAllMessagesChatView response = new GetAllMessagesChatView();
-
             List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetByRoomId(roomId);
-            if (!messageInRooms.Any())
-            {
-                return response;
-            }
+            List<MessageInRoom> orderedMessageInRooms = messageInRooms
+                .OrderBy(x => x.Message.CreationAt)
+                .ToList();
+            List<User> usersInRoom = _userManager.Users
+                .Where(x => x.CurrentRoomId == roomId)
+                .ToList();
 
+            if (messageInRooms.Where(x => x.Message.User == null).Any())
+            {
+                foreach (var item in messageInRooms)
+                {
+                    User user = await _userManager.FindByIdAsync(item.Message.UserId);
+                    item.Message.User = user;
+                }
+
+            }
+       
             response.RoomId = roomId;
-            response.Messages = _mapper.Map(messageInRooms, response.Messages);
+            response.Users = _mapper.Map(usersInRoom, response.Users);
+            response.Messages = _mapper.Map(orderedMessageInRooms, response.Messages);
 
             return response;
         }
@@ -137,7 +134,7 @@ namespace SignalRProject.BusinessLogic.Services
             return response;
         }
          
-        public async Task<GetUserCurrentRoomChatView> GetUserCurrentRoomByUserId(string userId)
+        public async Task<GetUserAndCurrentRoomChatView> GetUserAndCurrentRoomByUserId(string userId)
         {
             User user = await _userManager.FindByIdAsync(userId);
 
@@ -146,7 +143,7 @@ namespace SignalRProject.BusinessLogic.Services
                 throw new Exception("User is not find");
             }
 
-            GetUserCurrentRoomChatView response = new GetUserCurrentRoomChatView();
+            GetUserAndCurrentRoomChatView response = new GetUserAndCurrentRoomChatView();
             response = _mapper.Map(user, response);
 
             return response;
@@ -168,21 +165,44 @@ namespace SignalRProject.BusinessLogic.Services
 
         }
 
-        public async Task CreateMessage(string messageText, Guid roomId, string userId)
+        public async Task<GetCreateMessageChatView> CreateMessage(string messageText, Guid roomId, string userId)
         {
+            User user = await _userManager.FindByIdAsync(userId);
+
             Message message = new Message 
             { 
                 Text = messageText, 
                 UserId = userId 
             };
-
             MessageInRoom messageInRoom = new MessageInRoom
             {
                 RoomId = roomId,
                 MessageId = message.Id
             };
+            GetCreateMessageChatView response = new GetCreateMessageChatView()
+            {
+                Id = message.Id,
+                CreationAt = _dateTimeHelper.FormatDateFromDb(message.CreationAt),
+                Text = message.Text,
+                FullName = $"{user.FirstName} {user.LastName}",
+                UserId = userId
+            };
+
             await _messageRepository.Create(message);
             await _messageInRoomRepository.Create(messageInRoom);
+
+            return response;
+        }
+
+        public GetAllUsersChatView GetAllUsersByRoomId(Guid roomId)
+        {
+            var users = _userManager.Users
+                .Where(x => x.CurrentRoomId == roomId)
+                .ToList();
+            var response = new GetAllUsersChatView();
+
+            response.Users = _mapper.Map(users, response.Users);
+            return response;
         }
 
         #endregion Public Methods

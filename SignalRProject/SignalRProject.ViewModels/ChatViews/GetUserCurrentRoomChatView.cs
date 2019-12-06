@@ -2,8 +2,12 @@
 
 namespace SignalRProject.ViewModels.ChatViews
 {
-    public class GetUserCurrentRoomChatView
+    public class GetUserAndCurrentRoomChatView
     {
-        public Guid CurrentRoomId { get; set; } 
+        public string Id { get; set; }
+        public Guid CurrentRoomId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Photo { get; set; }
     }
 }

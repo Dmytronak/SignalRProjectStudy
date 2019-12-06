@@ -26,30 +26,28 @@ namespace SignalRProject.BusinessLogic.AutoMapperProfiles
                 .ForMember(destination => destination.Photo,
                     options => options.MapFrom(source => source.Room.Photo));
 
-            CreateMap<Room, GetRoomChatView>();
-            CreateMap<UserInRoom, UserGetRoomChatViewItem>()
+            CreateMap<User, UserGetAllMessagesChatViewItem>()
               .ForMember(destination => destination.Id,
-                  options => options.MapFrom(source => source.User.Id))
+                  options => options.MapFrom(source => source.Id))
               .ForMember(destination => destination.FirstName,
-                  options => options.MapFrom(source => source.User.FirstName))
+                  options => options.MapFrom(source => source.FirstName))
               .ForMember(destination => destination.LastName,
-                  options => options.MapFrom(source => source.User.LastName))
+                  options => options.MapFrom(source => source.LastName))
               .ForMember(destination => destination.Photo,
-                  options => options.MapFrom(source => source.User.Photo));
-            CreateMap<MessageInRoom, MessageGetRoomChatViewItem>()
-               .ForMember(destination => destination.Id,
-                   options => options.MapFrom(source => source.Message.Id))
-               .ForMember(destination => destination.Text,
-                   options => options.MapFrom(source => source.Message.Text));
+                  options => options.MapFrom(source => source.Photo));
+
 
             CreateMap<MessageInRoom, MessageGetAllMessagesChatViewItem>()
              .ForMember(destination => destination.Id,
                  options => options.MapFrom(source => source.Message.Id))
-               .ForMember(destination => destination.CreationAt,
-                 options => options.MapFrom(source => source.Message.CreationAt))
+             .ForMember(destination => destination.UserId, 
+                 options => options.MapFrom(source=> source.Message.UserId))
+             .ForMember(destination => destination.FullName,
+                 options => options.MapFrom(source => $"{source.Message.User.FirstName} {source.Message.User.LastName}"))
+             .ForMember(destination => destination.CreationAt,
+                 options => options.MapFrom(source => source.Message.CreationAt.ToString("MMMM dd, yyyy H:mm:ss")))
              .ForMember(destination => destination.Text,
                  options => options.MapFrom(source => source.Message.Text));
-
 
             CreateMap<List<Room>, GetAllRoomsChatView>()
                  .ForMember(destination => destination.Rooms,
@@ -57,7 +55,9 @@ namespace SignalRProject.BusinessLogic.AutoMapperProfiles
 
             CreateMap<Room, RoomGetAllRoomsChatViewtem>();
 
-            CreateMap<User, GetUserCurrentRoomChatView>();
+            CreateMap<User, GetUserAndCurrentRoomChatView>();
+            CreateMap<User, UserGetAllUsersChatViewViewItem>();
+
             #endregion
         }
     }

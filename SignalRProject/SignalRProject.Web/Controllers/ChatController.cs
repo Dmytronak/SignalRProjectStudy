@@ -24,13 +24,7 @@ namespace SignalRProject.Web.Controllers
             return View();
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Room(Guid roomId)
-        {
-            var response = await _chatService.GetRoomById(roomId);
-            return View(response);
-        }
-
+ 
         [HttpPost]
         public async Task<IActionResult> CreateRoom(CreateRoomChatView model)
         {

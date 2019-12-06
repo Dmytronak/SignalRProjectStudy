@@ -12,7 +12,7 @@ namespace SignalRProject.DataAccess.Entities
         public BaseEntity()
         {
             Id = Guid.NewGuid();
-            CreationAt = DateTime.UtcNow;
+            CreationAt = DateTime.Now;
         }
     }
 }

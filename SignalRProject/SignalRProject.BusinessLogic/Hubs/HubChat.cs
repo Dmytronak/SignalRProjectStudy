@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using SignalRProject.BusinessLogic.Services.Interfaces;
+using SignalRProject.ViewModels.ChatViews;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Hubs
@@ -30,13 +33,25 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            await Clients.All.SendAsync("UserConnected", $"{Context.UserIdentifier} join to converstion");
+            GetUserAndCurrentRoomChatView user = await _chatService.GetUserAndCurrentRoomByUserId(Context.User.Identity.Name);
+            GetAllRoomsChatView userRooms = await _chatService.GetByUserId(Context.User.Identity.Name);
+            List<string> roomNames = userRooms.Rooms
+                .Select(x => x.Name)
+                .ToList();
+            GetAllUsersChatView usersInRoom = _chatService.GetAllUsersByRoomId(user.CurrentRoomId);
+            await Clients.Groups(roomNames).SendAsync("UserConnected", $"{user.FirstName} {user.LastName} join to conversation", user, usersInRoom);
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await Clients.All.SendAsync("UserDisconnected",$"{Context.UserIdentifier} has left converstion");
+            GetUserAndCurrentRoomChatView user = await _chatService.GetUserAndCurrentRoomByUserId(Context.User.Identity.Name);
+            GetAllRoomsChatView userRooms = await _chatService.GetByUserId(Context.User.Identity.Name);
+            List<string> roomNames = userRooms.Rooms
+                .Select(x => x.Name)
+                .ToList();
+
+            await Clients.Groups(roomNames).SendAsync("UserDisconnected", $"{user.FirstName} {user.LastName} has left conversation", user);
             await base.OnDisconnectedAsync(ex);
         }
 
@@ -51,8 +66,8 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         public async Task SendMessageToRoom(string group, string roomId,string message)
         {
-            await _chatService.CreateMessage(message, Guid.Parse(roomId), Context.User.Identity.Name);
-            await Clients.Group(group).SendAsync("ReceiveMessage", Context.UserIdentifier, Context.User.Identity.Name, message, $"{_dateTime}");
+            GetCreateMessageChatView messageModel =  await _chatService.CreateMessage(message, Guid.Parse(roomId), Context.User.Identity.Name);
+            await Clients.Group(group).SendAsync("ReceiveMessage", messageModel);
         }
 
         public async Task SendMessageToCaller(string message)
@@ -67,23 +82,24 @@ namespace SignalRProject.BusinessLogic.Hubs
 
         public async Task JoinRoom(string roomId, string group)
         {
-            await Groups.AddToGroupAsync(Context.ConnectionId, group);
-            await Clients.Group(group).SendAsync("UserConnected", $"{Context.UserIdentifier} join to converstion");
             await _chatService.SetUserCurrentRoomByUserId(Context.User.Identity.Name, Guid.Parse(roomId));
 
-            var room = await _chatService.GetAllMessagesByRoomId(Guid.Parse(roomId));
+            GetUserAndCurrentRoomChatView user = await _chatService.GetUserAndCurrentRoomByUserId(Context.User.Identity.Name);
+            GetAllMessagesChatView room = await _chatService.GetAllMessagesByRoomId(Guid.Parse(roomId));
+            GetAllUsersChatView usersInRoom = _chatService.GetAllUsersByRoomId(user.CurrentRoomId);
 
-            foreach (var r in room.Messages)
-            {
-                await Clients.Group(group).SendAsync("ReceiveMessage", Context.UserIdentifier, Context.User.Identity.Name, r.Text, $"{r.CreationAt}");
-            }
-            
+            await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            await Clients.Group(group).SendAsync("UserConnected", $"{user.FirstName} {user.LastName} join to conversation", user, usersInRoom);
+            await Clients.Group(group).SendAsync("ReceiveRoomMessages", room);
+
         }
 
         public async Task LeaveRoom(string group)
         {
+            GetUserAndCurrentRoomChatView user = await _chatService.GetUserAndCurrentRoomByUserId(Context.User.Identity.Name);
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, group);
-            await Clients.Group(group).SendAsync("UserConnected", $"{Context.UserIdentifier} has left converstion");
+            await Clients.Group(group).SendAsync("UserDisconnected", $"{user.FirstName} {user.LastName} has left converstion", user);
         }
 
 
