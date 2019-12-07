@@ -20,6 +20,8 @@ namespace SignalRProject.ViewModels.MenuViewModel
         public string Name { get; set; }
 
         public string Photo { get; set; }
+
+        public string LastMessage { get; set; }
     }
 }
 

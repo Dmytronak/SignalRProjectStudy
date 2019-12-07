@@ -35,9 +35,12 @@ namespace SignalRProject.BusinessLogic.Hubs
         {
             GetUserAndCurrentRoomChatView user = await _chatService.GetUserAndCurrentRoomByUserId(Context.User.Identity.Name);
             GetAllRoomsChatView userRooms = await _chatService.GetByUserId(Context.User.Identity.Name);
+
             List<string> roomNames = userRooms.Rooms
+                .Where(x=>x.Id == user.CurrentRoomId)
                 .Select(x => x.Name)
                 .ToList();
+
             GetAllUsersChatView usersInRoom = _chatService.GetAllUsersByRoomId(user.CurrentRoomId);
             await Clients.Groups(roomNames).SendAsync("UserConnected", $"{user.FirstName} {user.LastName} join to conversation", user, usersInRoom);
             await base.OnConnectedAsync();

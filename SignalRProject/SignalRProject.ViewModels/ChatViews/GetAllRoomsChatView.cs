@@ -21,5 +21,6 @@ namespace SignalRProject.ViewModels.ChatViews
 
         public string Photo { get; set; }
 
+        public string LastMessage { get; set; }
     }
 }

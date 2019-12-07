@@ -23,6 +23,7 @@
                     {
                         <a onclick="getRoomById('@room.Id','@room.Name')" class="list-group-item list-group-item-action bg-light">
                             <img class="room-avatar" src="~/@room.Photo">@room.Name
+                            <p class="preview-last-message">@room.LastMessage</p>
                         </a>
                     }
                 }
@@ -61,6 +62,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/custom/home.js"></script>
     <script src="~/js/custom/auth.js"></script>
+    <script src="~/js/helpers/urlHelpers.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

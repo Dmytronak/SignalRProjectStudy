@@ -53,7 +53,16 @@ namespace SignalRProject.BusinessLogic.AutoMapperProfiles
                  .ForMember(destination => destination.Rooms,
                     options => options.MapFrom(source => source));
 
-            CreateMap<Room, RoomGetAllRoomsChatViewtem>();
+            CreateMap<MessageInRoom, RoomGetAllRoomsChatViewtem>()
+             .ForMember(destination => destination.Id,
+                 options => options.MapFrom(source => source.Room.Id))
+             .ForMember(destination => destination.Name,
+                 options => options.MapFrom(source => source.Room.Name))
+             .ForMember(destination => destination.Photo,
+                  options => options.MapFrom(source => source.Room.Photo))
+              .ForMember(destination => destination.LastMessage,
+                 options => options.MapFrom(source => source.Message.Text));
+           
 
             CreateMap<User, GetUserAndCurrentRoomChatView>();
             CreateMap<User, UserGetAllUsersChatViewViewItem>();

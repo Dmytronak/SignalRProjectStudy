@@ -16,6 +16,7 @@ namespace SignalRProject.BusinessLogic.Services
     public class ChatService : IChatService
     {
         #region Properties
+
         private readonly UserManager<User> _userManager;
         private readonly IRoomRepository _roomRepository;
         private readonly IUserInRoomRepository _userInRoomRepository;
@@ -24,7 +25,6 @@ namespace SignalRProject.BusinessLogic.Services
         private readonly IImageProvider _imageProvider;
         private readonly IMapper _mapper;
         private readonly IDateTimeHelper _dateTimeHelper;
-
 
         #endregion Properties
 
@@ -121,16 +121,51 @@ namespace SignalRProject.BusinessLogic.Services
         public async Task<GetAllRoomsChatView> GetAllRooms()
         {
             GetAllRoomsChatView response = new GetAllRoomsChatView();
-
+            List<MessageInRoom> lastMessages = new List<MessageInRoom>();
             List<Room> rooms = await _roomRepository.GetAll();
+            List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetAllRoomsAndMessages();
+            messageInRooms
+                .GroupBy(x => x.RoomId)
+                .ToList()
+                .ForEach(item => 
+                {
+                    MessageInRoom lastMessage = item
+                        .Where(x => x.RoomId == item.Key)
+                        .OrderByDescending(x => x.CreationAt)
+                        .FirstOrDefault();
+                    lastMessages.Add(lastMessage);
+                });
 
-            if (!rooms.Any())
+          
+            if (!messageInRooms.Any())
             {
                 return response;
             }
 
-            response.Rooms = _mapper.Map(rooms, response.Rooms);
+            response.Rooms = _mapper.Map(lastMessages, response.Rooms);
 
+            if (rooms.Count > response.Rooms.Count)
+            {
+                List<Guid> roomsWithMessagesIds = response.Rooms
+                    .Select(x => x.Id)
+                    .ToList();
+
+                var roomsWithotMessages = rooms
+                    .Where(x => !roomsWithMessagesIds
+                    .Contains(x.Id))
+                    .ToList()
+                    .Select(x=> new RoomGetAllRoomsChatViewtem() 
+                    { 
+                        Id = x.Id,
+                        Name = x.Name,
+                        Photo = x.Photo,
+                        LastMessage = "No messages yet"
+                    })
+                    .ToList();
+
+                response.Rooms.AddRange(roomsWithotMessages);
+            }
+            
             return response;
         }
          

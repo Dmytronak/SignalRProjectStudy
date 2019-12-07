@@ -16,7 +16,8 @@ document.getElementById("chatBody").hidden = true;
 connection.on("UserConnected", function (message,data, usersInRoom) {
     let notifyElem = document.createElement("b");
     notifyElem.appendChild(document.createTextNode(message));
-    let elem = document.createElement("p");
+    let elem = document.createElement("div");
+    elem.className = "notification-item-add"; 
     elem.appendChild(notifyElem);
 
     document.getElementById("messagesList").appendChild(elem);
@@ -24,20 +25,30 @@ connection.on("UserConnected", function (message,data, usersInRoom) {
 
     const usersDivCurrent = document.createElement('ul');
     usersDivCurrent.className = 'user-list';
+
+    let userHeader = document.createElement("p");
+    userHeader.className = "user-list-header";
+    userHeader.appendChild(document.createTextNode("Users in room:"));
+
+    document.getElementById("userList").appendChild(userHeader);
+
     usersDivCurrent.innerHTML = `
-            <li id="userListItem${data.id}">
-            <img class="avatar" src="/${data.photo}">
-            <div class="nick-name">${data.firstName} ${data.lastName}</div>
+            <li class="user-list-item" id="userListItem${data.id}">
+            <div class="nick-name small">
+                <img class="avatar" src="/${data.photo}">
+                ${data.firstName} ${data.lastName}
+            </div>
             </li>
             `;
 
     for (var i = 0; i < usersInRoom.users.length; i++) {
         if (usersInRoom.users[i].id !== data.id) {
-
             usersDivCurrent.innerHTML += `
-            <li id="userListItem${usersInRoom.users[i].id}">
-            <img class="avatar" src="/${usersInRoom.users[i].photo}">
-            <div class="nick-name">${usersInRoom.users[i].firstName} ${usersInRoom.users[i].lastName}</div>
+            <li class="user-list-item" id="userListItem${usersInRoom.users[i].id}">
+            <div class="nick-name small">
+                <img class="avatar" src="/${usersInRoom.users[i].photo}">
+                ${usersInRoom.users[i].firstName} ${usersInRoom.users[i].lastName}
+            </div>
             </li>
             `;
 
@@ -51,7 +62,8 @@ connection.on("UserConnected", function (message,data, usersInRoom) {
 connection.on("UserDisconnected", function (message, data) {
     let notifyElem = document.createElement("b");
     notifyElem.appendChild(document.createTextNode(message));
-    let elem = document.createElement("p");
+    let elem = document.createElement("div");
+    elem.className = "notification-item-remove"; 
     elem.appendChild(notifyElem);
     document.getElementById("messagesList").appendChild(elem);
     document.getElementById(`userListItem${data.id}`).remove();
@@ -59,35 +71,60 @@ connection.on("UserDisconnected", function (message, data) {
 
 
 connection.on("ReceiveMessage", function (data) {
+    const leftSide = 'left';
+    const rightSide = 'right';
+    let side = '';
+
     const messegeDiv = document.createElement('div');
-    messegeDiv.className = 'message';
+    messegeDiv.className = 'message-left';
+    side = leftSide;
+    if (data.userId == userId) {
+        messegeDiv.className = 'message-right';
+        side = rightSide;
+    }
     messegeDiv.innerHTML = `
-           <div class="nick-name">${data.fullName}</div>
             <img class="avatar" src="/uploaded-images/users/icons/${data.userId}.png">
-            <div class="datetime">${data.creationAt}</div>
+            <div class="header">
+                <small class=" text-muted"><span class="fas fa-clock"></span>${data.creationAt}</small>
+                <strong class="pull-${side} primary-font">${data.fullName} </strong>
+            </div>
             <p class="message-text">${data.text}</p
             `;
     document.getElementById("messagesList").appendChild(messegeDiv);
     document.getElementById("messageInput").value = '';
+
+    scrolToBottom();
 });
 
 
 connection.on("ReceiveRoomMessages", function (data) {
+    const leftSide = 'left';
+    const rightSide = 'right';
+    let side = '';
 
     if (document.getElementById("messagesList").childElementCount < 2) {
         for (var i = 0; i < data.messages.length; i++) {
             const messegeDiv = document.createElement('div');
-            messegeDiv.className = 'message';
+            messegeDiv.className = 'message-left';
+            side = leftSide;
+            if (data.messages[i].userId == userId) {
+                messegeDiv.className = 'message-right';
+                side = rightSide;
+            }
             messegeDiv.innerHTML = `
-            <div class="nick-name">${data.messages[i].fullName}</div>
             <img class="avatar" src="/uploaded-images/users/icons/${data.messages[i].userId}.png">
-            <div class="datetime">${data.messages[i].creationAt}</div>
-            <p class="message-text">${data.messages[i].text}</p
+            <div class="header">
+                <small class=" text-muted"><span class="fas fa-clock"></span>${data.messages[i].creationAt}</small>
+                <strong class="pull-${side} primary-font">${data.messages[i].fullName} </strong>
+            </div>
+            <p class="message-text">${linkify(data.messages[i].text)}</p
             `;
             document.getElementById("messagesList").appendChild(messegeDiv);
             document.getElementById("messageInput").value = '';
         }
     }
+
+    scrolToBottom();
    
 });
 
@@ -97,20 +134,11 @@ connection.start().then(function () {
     return console.error(err.toString());
 });
 
-window.setInterval(function () {
-    var elem = document.getElementsByClassName('chat-container')[0];
-    elem.scrollTop = elem.scrollHeight;
-}, 5000);
 
 function SendMassage() {
     var message = document.getElementById("messageInput").value;
     var roomName = $('#roomName').text();
 
-    //if (!roomName) {
-    //    connection.invoke("SendMessageToAll", message).catch(function (err) {
-    //        return console.error(err.toString());
-    //    });
-    //}
     if (roomName) {
         connection.invoke("SendMessageToRoom", roomName, currentRoomId, message).catch(function (err) {
             return console.error(err.toString());
@@ -136,5 +164,5 @@ function getRoomById(id, name) {
     $('.jumbotron').hide();
     $('.chat-body').show();
     currentRoomId = id;
-
+    scrolToBottom();
 }

@@ -24,5 +24,15 @@ namespace SignalRProject.DataAccess.Repositories.EntityFramework
             return result;
         }
 
+        public async Task<List<MessageInRoom>> GetAllRoomsAndMessages()
+        {
+            var result = await _dbSet
+                .Include(x => x.Room)
+                .Include(x => x.Message)
+                .ToListAsync();
+
+            return result;
+        }
+
     }
 }

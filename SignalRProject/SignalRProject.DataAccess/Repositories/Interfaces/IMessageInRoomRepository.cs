@@ -8,5 +8,6 @@ namespace SignalRProject.DataAccess.Repositories.Interfaces
     public interface IMessageInRoomRepository : IBaseRepository<MessageInRoom>
     {
         Task<List<MessageInRoom>> GetByRoomId(Guid roomId);
+        Task<List<MessageInRoom>> GetAllRoomsAndMessages();
     }
 }

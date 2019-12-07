@@ -9,20 +9,19 @@
         </div>
     </div>
     <div class="container" id="chatBody">
-        <p class="col-12" id="roomName"></p>
+        <p class="alert alert-warning text-center" id="roomName"></p>
         <div class="chat-container" id="messagesList">
         </div>
         <div class="users-container" id="userList">
-
         </div>
         <div class="send-message-form">
             <div class="row input-group">
                 <div class="col-1 text-center-padding">Message</div>
-                <div class="col-9">
+                <div class="col-8">
                     <textarea id="messageInput"></textarea>
                 </div>
-                <div class="col-2">
-                    <button class="btn btn-primary btn-block" id="sendButton" onclick="SendMassage()">Send Message</button>
+                <div class="col-1">
+                    <button class="btn btn-success btn-block" id="sendButton" onclick="SendMassage()"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
@@ -30,7 +29,7 @@
 
     <script>
 
-        var userEmail = '@User?.Identity?.Name';
+        var userId = '@User?.Claims?.FirstOrDefault()?.Value';
 
     </script>
 @{
