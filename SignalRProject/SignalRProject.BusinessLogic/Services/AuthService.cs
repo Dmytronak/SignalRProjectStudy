@@ -36,6 +36,10 @@ namespace SignalRProject.BusinessLogic.Services
         public async Task<GetAllAuthView> GetAll()
         {
             List<User> users = await _userManager.Users.ToListAsync();
+            if (!users.Any())
+            {
+                throw new Exception("User is not found");
+            }
             GetAllAuthView response = new GetAllAuthView()
             {
                 Users = users
@@ -54,9 +58,10 @@ namespace SignalRProject.BusinessLogic.Services
         public async Task<GetUserView> GetbyId(string userId)
         {
             User user = await _userManager.FindByIdAsync(userId);
+
             if (user == null)
             {
-                throw new Exception("User is not find");
+                throw new Exception("User is not found");
             }
 
             GetUserView response = new GetUserView
@@ -104,6 +109,7 @@ namespace SignalRProject.BusinessLogic.Services
         public async Task<LoginAuthResponseView> Login(LoginAuthView model)
         {
             SignInResult result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+
             if (!result.Succeeded)
             {
                 throw new Exception("Invalid Login or password");
@@ -128,6 +134,7 @@ namespace SignalRProject.BusinessLogic.Services
                 _signInManager.Context.Response.Cookies.Delete(".SignalRProjectCookieName");
             }
         }
+
         #endregion Public Methods
 
     }

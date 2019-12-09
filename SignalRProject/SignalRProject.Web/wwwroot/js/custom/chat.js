@@ -1,41 +1,41 @@
-﻿"use strict";
+﻿'use strict';
 var currentRoomId;
 let token = localStorage.getItem('access_token');
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/chatHub", { accessTokenFactory: () => token })
+    .withUrl('/chatHub', { accessTokenFactory: () => token })
     .configureLogging({
         log: function (logLevel, message) {
-            console.log(new Date().toISOString() + ": " + message);
+            console.log(new Date().toISOString() + ': ' + message);
         }
     })
     .build();
 
-document.getElementById("sendButton").disabled = true;
-document.getElementById("chatBody").hidden = true;
+document.getElementById('sendButton').disabled = true;
+document.getElementById('chatBody').hidden = true;
 
-connection.on("UserConnected", function (message,data, usersInRoom) {
-    let notifyElem = document.createElement("b");
+connection.on('UserConnected', function (message,data, usersInRoom) {
+    let notifyElem = document.createElement('b');
     notifyElem.appendChild(document.createTextNode(message));
-    let elem = document.createElement("div");
-    elem.className = "notification-item-add"; 
+    let elem = document.createElement('div');
+    elem.className = 'notification-item-add'; 
     elem.appendChild(notifyElem);
 
-    document.getElementById("messagesList").appendChild(elem);
-    document.getElementById("userList").innerHTML = '';
+    document.getElementById('messagesList').appendChild(elem);
+    document.getElementById('userList').innerHTML = '';
 
     const usersDivCurrent = document.createElement('ul');
     usersDivCurrent.className = 'user-list';
 
-    let userHeader = document.createElement("p");
-    userHeader.className = "user-list-header";
-    userHeader.appendChild(document.createTextNode("Users in room:"));
+    let userHeader = document.createElement('p');
+    userHeader.className = 'user-list-header';
+    userHeader.appendChild(document.createTextNode('Users in room:'));
 
-    document.getElementById("userList").appendChild(userHeader);
+    document.getElementById('userList').appendChild(userHeader);
 
     usersDivCurrent.innerHTML = `
-            <li class="user-list-item" id="userListItem${data.id}">
-            <div class="nick-name small">
-                <img class="avatar" src="/${data.photo}">
+            <li class='user-list-item' id='userListItem${data.id}'>
+            <div class='nick-name small'>
+                <img class='avatar' src='/${data.photo}'>
                 ${data.firstName} ${data.lastName}
             </div>
             </li>
@@ -44,9 +44,9 @@ connection.on("UserConnected", function (message,data, usersInRoom) {
     for (var i = 0; i < usersInRoom.users.length; i++) {
         if (usersInRoom.users[i].id !== data.id) {
             usersDivCurrent.innerHTML += `
-            <li class="user-list-item" id="userListItem${usersInRoom.users[i].id}">
-            <div class="nick-name small">
-                <img class="avatar" src="/${usersInRoom.users[i].photo}">
+            <li class='user-list-item' id='userListItem${usersInRoom.users[i].id}'>
+            <div class='nick-name small'>
+                <img class='avatar' src='/${usersInRoom.users[i].photo}'>
                 ${usersInRoom.users[i].firstName} ${usersInRoom.users[i].lastName}
             </div>
             </li>
@@ -54,23 +54,23 @@ connection.on("UserConnected", function (message,data, usersInRoom) {
 
         }
     }
-    document.getElementById("userList").appendChild(usersDivCurrent);
+    document.getElementById('userList').appendChild(usersDivCurrent);
 
 
 });
 
-connection.on("UserDisconnected", function (message, data) {
-    let notifyElem = document.createElement("b");
+connection.on('UserDisconnected', function (message, data) {
+    let notifyElem = document.createElement('b');
     notifyElem.appendChild(document.createTextNode(message));
-    let elem = document.createElement("div");
-    elem.className = "notification-item-remove"; 
+    let elem = document.createElement('div');
+    elem.className = 'notification-item-remove'; 
     elem.appendChild(notifyElem);
-    document.getElementById("messagesList").appendChild(elem);
+    document.getElementById('messagesList').appendChild(elem);
     document.getElementById(`userListItem${data.id}`).remove();
 });
 
 
-connection.on("ReceiveMessage", function (data) {
+connection.on('ReceiveMessage', function (data) {
     const leftSide = 'left';
     const rightSide = 'right';
     let side = '';
@@ -83,26 +83,26 @@ connection.on("ReceiveMessage", function (data) {
         side = rightSide;
     }
     messegeDiv.innerHTML = `
-            <img class="avatar" src="/uploaded-images/users/icons/${data.userId}.png">
-            <div class="header">
-                <small class=" text-muted"><span class="fas fa-clock"></span>${data.creationAt}</small>
-                <strong class="pull-${side} primary-font">${data.fullName} </strong>
+            <img class='avatar' src='/uploaded-images/users/icons/${data.userId}.png'>
+            <div class='header'>
+                <small class=' text-muted'><span class='fas fa-clock'></span>${data.creationAt}</small>
+                <strong class='pull-${side} primary-font'>${data.fullName} </strong>
             </div>
-            <p class="message-text">${data.text}</p
+            <p class='message-text'>${data.text}</p
             `;
-    document.getElementById("messagesList").appendChild(messegeDiv);
-    document.getElementById("messageInput").value = '';
+    document.getElementById('messagesList').appendChild(messegeDiv);
+    document.getElementById('messageInput').value = '';
 
     scrolToBottom();
 });
 
 
-connection.on("ReceiveRoomMessages", function (data) {
+connection.on('ReceiveRoomMessages', function (data) {
     const leftSide = 'left';
     const rightSide = 'right';
     let side = '';
 
-    if (document.getElementById("messagesList").childElementCount < 2) {
+    if (document.getElementById('messagesList').childElementCount < 2) {
         for (var i = 0; i < data.messages.length; i++) {
             const messegeDiv = document.createElement('div');
             messegeDiv.className = 'message-left';
@@ -112,15 +112,15 @@ connection.on("ReceiveRoomMessages", function (data) {
                 side = rightSide;
             }
             messegeDiv.innerHTML = `
-            <img class="avatar" src="/uploaded-images/users/icons/${data.messages[i].userId}.png">
-            <div class="header">
-                <small class=" text-muted"><span class="fas fa-clock"></span>${data.messages[i].creationAt}</small>
-                <strong class="pull-${side} primary-font">${data.messages[i].fullName} </strong>
+            <img class='avatar' src='/uploaded-images/users/icons/${data.messages[i].userId}.png'>
+            <div class='header'>
+                <small class=' text-muted'><span class='fas fa-clock'></span>${data.messages[i].creationAt}</small>
+                <strong class='pull-${side} primary-font'>${data.messages[i].fullName} </strong>
             </div>
-            <p class="message-text">${linkify(data.messages[i].text)}</p
+            <p class='message-text'>${linkify(data.messages[i].text)}</p
             `;
-            document.getElementById("messagesList").appendChild(messegeDiv);
-            document.getElementById("messageInput").value = '';
+            document.getElementById('messagesList').appendChild(messegeDiv);
+            document.getElementById('messageInput').value = '';
         }
     }
 
@@ -129,18 +129,21 @@ connection.on("ReceiveRoomMessages", function (data) {
 });
 
 connection.start().then(function () {
-    document.getElementById("sendButton").disabled = false;
+    document.getElementById('sendButton').disabled = false;
 }).catch(function (err) {
+    if (err.statusCode === 401) {
+        logOut();
+    }
     return console.error(err.toString());
 });
 
 
 function SendMassage() {
-    var message = document.getElementById("messageInput").value;
+    var message = document.getElementById('messageInput').value;
     var roomName = $('#roomName').text();
 
     if (roomName) {
-        connection.invoke("SendMessageToRoom", roomName, currentRoomId, message).catch(function (err) {
+        connection.invoke('SendMessageToRoom', roomName, currentRoomId, message).catch(function (err) {
             return console.error(err.toString());
         });
     }
@@ -148,15 +151,21 @@ function SendMassage() {
 
 function getRoomById(id, name) {
     const rommNameToLeft = $('#roomName').text();
-    document.getElementById("chatBody").hidden = false;
-    document.getElementById("messagesList").innerHTML = '';
-    document.getElementById("userList").innerHTML = '';
+    document.getElementById('chatBody').hidden = false;
+    document.getElementById('messagesList').innerHTML = '';
+    document.getElementById('userList').innerHTML = '';
     if (rommNameToLeft) {
-        connection.invoke("LeaveRoom", rommNameToLeft).catch(function (err) {
+        connection.invoke('LeaveRoom', rommNameToLeft).catch(function (err) {
+            if (err.statusCode === 401) {
+                logOut();
+            }
             return console.error(err.toString());
         });
     }
-    connection.invoke("JoinRoom", id, name).catch(function (err) {
+    connection.invoke('JoinRoom', id, name).catch(function (err) {
+        if (err.statusCode === 401) {
+            logOut();
+        }
         return console.error(err.toString());
     });
 
@@ -165,4 +174,5 @@ function getRoomById(id, name) {
     $('.chat-body').show();
     currentRoomId = id;
     scrolToBottom();
+
 }

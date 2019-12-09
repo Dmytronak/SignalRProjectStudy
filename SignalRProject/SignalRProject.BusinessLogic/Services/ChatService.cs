@@ -55,7 +55,7 @@ namespace SignalRProject.BusinessLogic.Services
 
             if (!userInRooms.Any())
             {
-                return response;
+                throw new Exception("User in rooms is not found");
             }
 
             response.Rooms = _mapper.Map(userInRooms, response.Rooms);
@@ -67,11 +67,18 @@ namespace SignalRProject.BusinessLogic.Services
         {
             GetAllMessagesChatView response = new GetAllMessagesChatView();
             List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetByRoomId(roomId);
+            List<User> userInRooms = _userManager.Users
+                .Where(x => x.CurrentRoomId == roomId)
+                .ToList();
+
+
+            if (!userInRooms.Any())
+            {
+                throw new Exception("User in rooms is not found");
+            }
+
             List<MessageInRoom> orderedMessageInRooms = messageInRooms
                 .OrderBy(x => x.Message.CreationAt)
-                .ToList();
-            List<User> usersInRoom = _userManager.Users
-                .Where(x => x.CurrentRoomId == roomId)
                 .ToList();
 
             if (messageInRooms.Where(x => x.Message.User == null).Any())
@@ -85,7 +92,7 @@ namespace SignalRProject.BusinessLogic.Services
             }
        
             response.RoomId = roomId;
-            response.Users = _mapper.Map(usersInRoom, response.Users);
+            response.Users = _mapper.Map(userInRooms, response.Users);
             response.Messages = _mapper.Map(orderedMessageInRooms, response.Messages);
 
             return response;
@@ -94,7 +101,12 @@ namespace SignalRProject.BusinessLogic.Services
         public async Task CreateRoom(CreateRoomChatView model, string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
-          
+
+            if (user == null)
+            {
+                throw new Exception("User is not found");
+            }
+
             Room room = new Room
             {
                 Name = model.Name,
@@ -124,6 +136,17 @@ namespace SignalRProject.BusinessLogic.Services
             List<MessageInRoom> lastMessages = new List<MessageInRoom>();
             List<Room> rooms = await _roomRepository.GetAll();
             List<MessageInRoom> messageInRooms = await _messageInRoomRepository.GetAllRoomsAndMessages();
+
+            if (!messageInRooms.Any())
+            {
+                throw new Exception("Message in rooms is not found");
+            }
+
+            if (!rooms.Any())
+            {
+                throw new Exception("Rooms is not found");
+            }
+
             messageInRooms
                 .GroupBy(x => x.RoomId)
                 .ToList()
@@ -204,6 +227,11 @@ namespace SignalRProject.BusinessLogic.Services
         {
             User user = await _userManager.FindByIdAsync(userId);
 
+            if (user == null)
+            {
+                throw new Exception("User is not find");
+            }
+
             Message message = new Message 
             { 
                 Text = messageText, 
@@ -234,6 +262,12 @@ namespace SignalRProject.BusinessLogic.Services
             var users = _userManager.Users
                 .Where(x => x.CurrentRoomId == roomId)
                 .ToList();
+
+            if (!users.Any())
+            {
+                throw new Exception("Users is not find");
+            }
+
             var response = new GetAllUsersChatView();
 
             response.Users = _mapper.Map(users, response.Users);

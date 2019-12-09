@@ -1,18 +1,15 @@
 ﻿using AutoMapper;
 using SignalRProject.BusinessLogic.Fabrics.Interfaces;
 using SignalRProject.BusinessLogic.Services.Interfaces;
-using SignalRProject.DataAccess.Entities;
 using SignalRProject.DataAccess.Repositories.Interfaces;
 using SignalRProject.ViewModels.ChatViews;
 using SignalRProject.ViewModels.MenuViewModel;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SignalRProject.BusinessLogic.Fabrics
 {
-   
+
     public class ChatMenuItemsFabric : IChatMenuItemsFabric
     {
         #region Properties
